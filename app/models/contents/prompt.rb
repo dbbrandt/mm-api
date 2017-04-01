@@ -1,0 +1,3 @@
+class Prompt < Content
+
+end
