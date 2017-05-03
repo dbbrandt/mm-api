@@ -1,11 +1,8 @@
 Rails.application.routes.draw do
 
-  resources :goals do
-    resources :interactions
+  namespace :admin do
   end
-
-  resources :interactions do
-    resources :contents
-  end
+  # mount Fae below your admin namespec
+  mount Fae::Engine => '/admin'
 
 end
