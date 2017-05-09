@@ -1,5 +1,11 @@
 class Goal < ApplicationRecord
-  has_many :interactions, dependent: :destroy
+  include Fae::BaseModelConcern
 
-  validates_presence_of :name
+  def fae_display_field
+    title
+  end
+
+  has_fae_image :hero_image
+
+  has_many :interactions
 end
