@@ -10,10 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170503205750) do
+ActiveRecord::Schema.define(version: 20170507195311) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "contents", force: :cascade do |t|
+    t.string   "title"
+    t.string   "content_type"
+    t.text     "description"
+    t.text     "copy"
+    t.float    "score"
+    t.text     "descriptor"
+    t.integer  "interaction_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["interaction_id"], name: "index_contents_on_interaction_id", using: :btree
+  end
 
   create_table "fae_changes", force: :cascade do |t|
     t.integer  "changeable_id"
@@ -163,4 +176,23 @@ ActiveRecord::Schema.define(version: 20170503205750) do
     t.index ["unlock_token"], name: "index_fae_users_on_unlock_token", unique: true, using: :btree
   end
 
+  create_table "goals", force: :cascade do |t|
+    t.string   "title"
+    t.string   "description"
+    t.text     "instructions"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "interactions", force: :cascade do |t|
+    t.string   "title"
+    t.string   "answer_type"
+    t.integer  "goal_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["goal_id"], name: "index_interactions_on_goal_id", using: :btree
+  end
+
+  add_foreign_key "contents", "interactions"
+  add_foreign_key "interactions", "goals"
 end
