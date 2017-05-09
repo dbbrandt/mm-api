@@ -1,0 +1,13 @@
+= simple_form_for(['admin', @item]) do |f|
+  header.content-header.js-content-header
+    == render 'fae/shared/form_header', header: @klass_name
+  == render 'fae/shared/errors'
+
+  main.content
+    = fae_input f, :title
+    = fae_pulldown f, :answer_type, size: 'long', collection: Interaction::TYPES
+
+    - if @goal
+      = f.hidden :goal, input_html: { value: @goal }
+    - else
+      = fae_association f, :goal
