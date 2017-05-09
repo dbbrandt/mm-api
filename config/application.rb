@@ -28,5 +28,6 @@ module MmApi
     # Skip views, helpers and assets when generating a new resource.
     #config.api_only = true
     config.autoload_paths += %W(#{config.root}/app/models/**/)
+    config.action_controller.include_all_helpers = true
   end
 end
