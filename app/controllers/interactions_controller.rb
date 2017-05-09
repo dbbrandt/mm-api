@@ -2,7 +2,7 @@ class InteractionsController < ApplicationController
   before_action :set_goal
   before_action :set_goal_interaction, only: [:show, :update, :destroy]
 
-  # GET /goals/:goal_id/interactions
+  # GET /interactions/:interaction_id/contents
   def index
     json_response(@goal.interactions)
   end
@@ -15,12 +15,12 @@ class InteractionsController < ApplicationController
   # POST /goals/:goal_id/interactions
   def create
     @goal.interactions.create!(interaction_params)
-    json_response(@goal, :created)
+    json_response(@interaction, :created)
   end
 
   # PUT /goals/:goal_id/interactions/:id
   def update
-    @interaction.update(interaction_params)
+    @goal.update(interaction_params)
     head :no_content
   end
 
@@ -33,7 +33,7 @@ class InteractionsController < ApplicationController
   private
 
   def interaction_params
-    params.permit(:name, :type)
+    params.permit(:type, :description, :image_url, :copy, :score, :descriptor)
   end
 
   def set_goal
@@ -43,4 +43,5 @@ class InteractionsController < ApplicationController
   def set_goal_interaction
     @interaction = @goal.interactions.find_by!(id: params[:id]) if @goal
   end
+
 end
