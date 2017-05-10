@@ -8,6 +8,9 @@
     = fae_pulldown f, :answer_type, size: 'long', collection: Interaction::TYPES
 
     - if @goal
-      = f.hidden :goal, input_html: { value: @goal }
+      = f.input :goal_id, as: :hidden, input_html: { value: @goal.id }
+      label
+        .control-label Goal
+      = @goal.title
     - else
       = fae_association f, :goal
