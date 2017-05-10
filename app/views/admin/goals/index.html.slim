@@ -5,17 +5,18 @@ main.content
     thead
       tr
         th Title
+        th.-action data-sorter="false"
+        th.-action data-sorter="false"
+        th.-action data-sorter="false"
         th.-action-wide Modified
-        th.-action data-sorter="false"
-        th.-action data-sorter="false"
-        
     tbody
       - if @items.present?
         - @items.each do |item|
           tr id=fae_sort_id(item)
-            td = link_to item.fae_display_field, edit_admin_goal_path(item)
-            td = fae_date_format item.updated_at
-            td = fae_add_button Interaction, new_admin_interaction, item.goal_id
+            td = link_to item.fae_display_field, admin_goal_interactions_path(goal_id: item.id)
+            td = fae_edit_button item, edit_admin_goal_path(item)
+            td = fae_add_button Interaction, new_admin_goal_interactions_path(goal_id: item.id)
             td = fae_delete_button item
+            td = fae_date_format item.updated_at
       - else
-        tr: td colspan="3" No items found
+        tr: td colspan="5" No items found
