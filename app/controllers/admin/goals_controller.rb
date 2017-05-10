@@ -3,6 +3,7 @@ module Admin
 
     def interactions
       @items = Interaction.where(goal_id: params[:id])
+      @goal = @item.goal
     end
 
     private
