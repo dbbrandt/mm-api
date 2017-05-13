@@ -1,4 +1,4 @@
-= simple_form_for(['admin', @item]) do |f|
+= simple_form_for(['admin', @item], {url: admin_goal_interactions_path(interaction_id: @item.id)}) do |f|
   header.content-header.js-content-header
     == render 'fae/shared/form_header', header: @klass_name
   == render 'fae/shared/errors'
