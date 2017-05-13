@@ -13,6 +13,9 @@ class Content < ApplicationRecord
 
   default_scope { order('updated_at DESC') }
 
-#  validates_presence_of :copy, :unless => :stimulus?
-#  validates_presence_of :stimulus, :unless => :copy?
+  validates_presence_of :content_type
+  validates_inclusion_of :content_type, in: TYPES
+
+#  validates_presence_of :copy, unless: defined?(:stimulus)
+  validates_presence_of :stimulus, unless: :copy?
 end
