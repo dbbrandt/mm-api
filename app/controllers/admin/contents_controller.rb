@@ -1,5 +1,5 @@
 module Admin
-  class ContentsController < AdminBaseController
+  class ContentsController < Fae::BaseController
     before_action :set_interaction
 
     def index
@@ -18,20 +18,8 @@ module Admin
     end
 
     def set_interaction
-      @interaction = Interaction.find_by_id(params[:interaction])
-    end
-
-    def set_class_variables(class_name = nil)
-      set_fae_variables
-      @index_path = scoped_path                            # used in form_header and form_buttons partials
-      @new_path = scoped_path('/new')                      # used in index_header partial
-    end
-
-    # add a parameter to the index path to scope the view to the parent
-    def scoped_path(action = '')
-      set_interaction
-      scope = @interaction? "?interaction=#{@interaction.id}" : ''
-      return '/' + params[:controller] + action + scope
+      cookies[:interaction_id] = params[:interaction_id] if params[:interaction_id]
+      @interaction = Interaction.find_by_id(cookies[:interaction_id])
     end
 
   end

@@ -1,5 +1,5 @@
 module Admin
-  class InteractionsController < AdminBaseController
+  class InteractionsController < Fae::BaseController
     before_action :set_goal
 
     def index
@@ -22,21 +22,8 @@ module Admin
     private
 
     def set_goal
-      #@goal = params[:goal]? Goal.find_by_id(params[:goal]) : Goal.find_by_id(params[:goal_id])
-      @goal = Goal.find_by_id(params[:goal_id])
-    end
-
-    def set_class_variables(class_name = nil)
-      set_fae_variables
-      @index_path = scoped_path                            # used in form_header and form_buttons partials
-      @new_path = scoped_path('/new')                      # used in index_header partial
-    end
-
-    # add a parameter to the index path to scope the view to the parent
-    def scoped_path(action = '')
-      set_goal
-      scope = @goal? "?goal_id=#{@goal.id}" : ''
-      return '/' + params[:controller] + action + scope
+      cookies[:goal_id] = params[:goal_id] if params[:goal_id]
+      @goal = Goal.find_by_id(cookies[:goal_id])
     end
 
   end
