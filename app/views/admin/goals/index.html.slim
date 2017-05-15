@@ -13,9 +13,9 @@ main.content
       - if @items.present?
         - @items.each do |item|
           tr id=fae_sort_id(item)
-            td = link_to item.fae_display_field, admin_goal_interactions_path(goal_id: item.id)+"?goal_id=#{item.id}"
+            td = link_to item.fae_display_field, admin_goal_interactions_path(goal_id: item.id)
             td = fae_edit_button item
-            td = fae_add_button Interaction, new_admin_goal_interaction_path(goal_id: item.id)+"?goal_id=#{item.id}"
+            td = fae_add_button Interaction, new_admin_goal_interaction_path(goal_id: item.id)
             td = fae_delete_button item
             td = fae_date_format item.updated_at
       - else

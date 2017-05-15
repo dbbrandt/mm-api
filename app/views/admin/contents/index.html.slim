@@ -2,7 +2,6 @@
 
 main.content
   - if @interaction
-    - interaction_id = @interaction.id
     h3 Interaction: #{@interaction.title}
   table.js-sort-column
     thead
@@ -19,7 +18,7 @@ main.content
           tr id=fae_sort_id(item)
             - unless @interaction
               td = item.interaction.title
-            td = link_to item.fae_display_field, edit_admin_content_path(item)+"?interaction=#{interaction_id}"
+            td = link_to item.fae_display_field, edit_admin_content_path(item)
             td = item.content_type
             td = fae_delete_button item
             td = fae_date_format item.updated_at
