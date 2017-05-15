@@ -1,4 +1,4 @@
-= simple_form_for(['admin', @item], {url: admin_goal_interactions_path(interaction_id: @item.id)}) do |f|
+= simple_form_for(['admin', @item]) do |f|
   header.content-header.js-content-header
     == render 'fae/shared/form_header', header: @klass_name
   == render 'fae/shared/errors'
@@ -8,7 +8,7 @@
     = fae_pulldown f, :answer_type, size: 'long', collection: Interaction::TYPES
 
     - if @goal
-      = f.input :goal_id, as: :hidden, input_html: { value: @goal.id }
+      = f.input :goal, as: :hidden, input_html: { name: "interaction[goal_id]", value: @goal.id, "data-klass" =>  "Interaction" }
       label
         .control-label Goal
       = @goal.title

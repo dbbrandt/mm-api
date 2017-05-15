@@ -5,6 +5,7 @@
 
 main.content
   - if @goal
+    - goal_id = @goal.id
     h3 Goal: #{@goal.title}
   table.js-sort-column
     thead
@@ -24,10 +25,10 @@ main.content
           tr id=fae_sort_id(item)
             - unless @goal
               td = item.goal.title
-            td = link_to item.fae_display_field, admin_interaction_contents_path(interaction_id: item.id)
-            td = fae_edit_button item,  edit_admin_goal_interaction_path(goal_id: @goal.id, id: item.id)
-            td = fae_add_button Content, new_admin_interaction_content_path(interaction_id: item.id)
-            td = fae_delete_button item, admin_goal_interaction_path(goal_id: @goal.id, id: item.id)
-            td = fae_date_format item.updated_at
+            td = link_to item.fae_display_field, admin_interaction_contents_path(interaction_id: item.id)+"?interaction_id=#{item.id}"
+            td = fae_edit_button item, edit_admin_interaction_path(id: item.id)+"?goal_id=#{goal_id}"
+            td = fae_add_button Content, new_admin_interaction_content_path(interaction_id: item.id)+"?interaction_id=#{item.id}"
+            td = fae_delete_button item, admin_interaction_path(id: item.id)+"?goal_id=#{goal_id}"
+            td = fae_date_format  item.updated_at
       - else
         tr: td colspan="#{(@goal)?5:6}" No items found

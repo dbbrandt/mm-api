@@ -1,5 +1,5 @@
 module Admin
-  class GoalsController < FaeBaseController
+  class GoalsController < AdminBaseController
 
     private
 

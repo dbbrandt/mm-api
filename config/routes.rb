@@ -16,6 +16,8 @@ Rails.application.routes.draw do
     resources :interactions do
       resources :contents
     end
+
+    resources :contents
   end
   
   # mount Fae below your admin namespec
