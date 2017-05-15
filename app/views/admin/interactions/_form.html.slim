@@ -8,7 +8,8 @@
     = fae_pulldown f, :answer_type, size: 'long', collection: Interaction::TYPES
 
     - if @goal
-      = f.input :goal, as: :hidden, input_html: { name: "interaction[goal_id]", value: @goal.id, "data-klass" =>  "Interaction" }
+      = f.input :goal, as: :hidden,
+              input_html: { name: "interaction[goal_id]", value: @goal.id, "data-klass" =>  "Interaction" }
       label
         .control-label Goal
       = @goal.title

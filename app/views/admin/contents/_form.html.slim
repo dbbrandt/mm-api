@@ -5,7 +5,8 @@
 
   main.content
     - if @interaction
-      = f.input :interaction, as: :hidden, input_html: { value: @interaction.id}
+      = f.input :interaction, as: :hidden,
+              input_html: {name: "content[interaction_id]", value: @interaction.id, "data-klass" => "Content"}
       label
         .control-label Interaction
       h3 = @interaction.title
