@@ -1,0 +1,26 @@
+== render 'fae/shared/index_header', title: @klass_humanized.pluralize.titleize
+
+main.content
+  - if @interaction
+    h3 Interaction: #{@interaction.title}
+  table.js-sort-column
+    thead
+      tr
+        - unless @interaction
+          th width="20%" Interaction
+        th Title
+        th width="10%" Type
+        th.-action data-sorter="false"
+        th.-action-wide Modified
+    tbody
+      - if @items.present?
+        - @items.each do |item|
+          tr id=fae_sort_id(item)
+            - unless @interaction
+              td = item.interaction.title
+            td = link_to item.fae_display_field, edit_admin_content_path(item)
+            td = item.content_type
+            td = fae_delete_button item
+            td = fae_date_format item.updated_at
+      - else
+        tr: td colspan="#{(@interaction)?4:5}" No items found
