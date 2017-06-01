@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    get '/', to: redirect('/admin/goals')
     resources :goals do
       resources :interactions
     end
