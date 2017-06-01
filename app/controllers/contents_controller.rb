@@ -41,7 +41,7 @@ class ContentsController < ApplicationController
   end
 
   def set_interaction_content
-    @content = @interaction.contents.find_by!(id: params[:id]) if @interaction
+    @content = @interaction.contents.select {|c| c[:id] == params[:id]} if @interaction
   end
 
 end
