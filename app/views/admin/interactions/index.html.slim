@@ -5,13 +5,14 @@
 
 main.content
   - if @goal
-    h3 Goal: #{@goal.title}
+    h3 = link_to "Goal: #{@goal.title}", admin_goals_path
   table.js-sort-column
     thead
       tr
         - unless @goal
           th width="20%" Goal
         th Title
+        th Type
         th.-action data-sorter="false"
         th.-action data-sorter="false"
         th.-action data-sorter="false"
@@ -25,6 +26,7 @@ main.content
             - unless @goal
               td = item.goal.title
             td = link_to item.fae_display_field, admin_interaction_contents_path(interaction_id: item.id)
+            td = item.answer_type
             td = fae_edit_button item
             td = fae_add_button Content, new_admin_interaction_content_path(interaction_id: item.id)
             td = fae_delete_button item
