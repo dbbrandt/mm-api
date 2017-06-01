@@ -26,9 +26,7 @@ module Fae
     def structure
       [
         item('Goals', path: admin_goals_path),
-        item('Interactions', path: admin_interactions_path),
-        item('Contents', path: admin_contents_path),
-        # scaffold inject marker
+         # scaffold inject marker
       ]
     end
 

@@ -5,6 +5,9 @@ main.content
     thead
       tr
         th Title
+        th Image
+        th Description
+        th Interactions
         th.-action data-sorter="false"
         th.-action data-sorter="false"
         th.-action data-sorter="false"
@@ -14,9 +17,12 @@ main.content
         - @items.each do |item|
           tr id=fae_sort_id(item)
             td = link_to item.fae_display_field, admin_goal_interactions_path(goal_id: item.id)
+            td = image_tag(item.hero_image.asset.url, size: "50", alt: item.hero_image.alt)
+            td = item.description
+            td = item.interactions.size
             td = fae_edit_button item
             td = fae_add_button Interaction, new_admin_goal_interaction_path(goal_id: item.id)
             td = fae_delete_button item
             td = fae_date_format item.updated_at
       - else
-        tr: td colspan="5" No items found
+        tr: td colspan="7" No items found

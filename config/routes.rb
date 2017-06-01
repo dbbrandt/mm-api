@@ -9,14 +9,15 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    get '/', to: redirect('/admin/goals')
     resources :goals do
       resources :interactions
     end
-
     resources :interactions do
-      resources :contents
+     resources :contents
     end
 
+    # Allow only routs to
     resources :contents
   end
   
