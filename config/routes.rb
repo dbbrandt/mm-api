@@ -13,11 +13,11 @@ Rails.application.routes.draw do
     resources :goals do
       resources :interactions
     end
-
     resources :interactions do
-      resources :contents
+     resources :contents
     end
 
+    # Allow only routs to
     resources :contents
   end
   

@@ -30,6 +30,7 @@ class InteractionsController < ApplicationController
     head :no_content
   end
 
+  #
   private
 
   def interaction_params
@@ -41,6 +42,6 @@ class InteractionsController < ApplicationController
   end
 
   def set_goal_interaction
-    @interaction = @goal.interactions.find_by!(id: params[:id]) if @goal
+    @interaction = @goal.interactions.select {|i|  i[:id] = params[:id]}  if @goal
   end
 end
