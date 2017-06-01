@@ -15,7 +15,7 @@ class InteractionsController < ApplicationController
   # POST /goals/:goal_id/interactions
   def create
     @goal.interactions.create!(interaction_params)
-    json_response(@goal, :created)
+    json_response(@interaction, :created)
   end
 
   # PUT /goals/:goal_id/interactions/:id
@@ -30,10 +30,11 @@ class InteractionsController < ApplicationController
     head :no_content
   end
 
+  #
   private
 
   def interaction_params
-    params.permit(:name, :type)
+    params.permit(:name, :answer_type)
   end
 
   def set_goal
@@ -41,6 +42,6 @@ class InteractionsController < ApplicationController
   end
 
   def set_goal_interaction
-    @interaction = @goal.interactions.find_by!(id: params[:id]) if @goal
+    @interaction = @goal.interactions.select {|i|  i[:id] = params[:id]}  if @goal
   end
 end

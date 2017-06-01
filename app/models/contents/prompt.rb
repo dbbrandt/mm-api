@@ -1,3 +1,0 @@
-class Prompt < Content
-
-end

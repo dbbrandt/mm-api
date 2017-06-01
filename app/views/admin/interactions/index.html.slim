@@ -1,0 +1,35 @@
+== render 'fae/shared/index_header', title: @klass_humanized.pluralize.titleize
+
+/== fae_filter_form title: 'Goal', search: false
+/  == fae_filter_select :goal, label: 'Select Goal'
+
+main.content
+  - if @goal
+    h3 = link_to "Goal: #{@goal.title}", admin_goals_path
+  table.js-sort-column
+    thead
+      tr
+        - unless @goal
+          th width="20%" Goal
+        th Title
+        th Type
+        th.-action data-sorter="false"
+        th.-action data-sorter="false"
+        th.-action data-sorter="false"
+        th.-action-wide Modified
+        
+    /tbody.js-results-table
+    tbody
+      - if @items.present?
+        - @items.each do |item|
+          tr id=fae_sort_id(item)
+            - unless @goal
+              td = item.goal.title
+            td = link_to item.fae_display_field, admin_interaction_contents_path(interaction_id: item.id)
+            td = item.answer_type
+            td = fae_edit_button item
+            td = fae_add_button Content, new_admin_interaction_content_path(interaction_id: item.id)
+            td = fae_delete_button item
+            td = fae_date_format  item.updated_at
+      - else
+        tr: td colspan="#{(@goal)?5:6}" No items found

@@ -1,0 +1,25 @@
+= simple_form_for(['admin', @item]) do |f|
+  header.content-header.js-content-header
+    == render 'fae/shared/form_header', header: @klass_name
+  == render 'fae/shared/errors'
+
+  main.content
+    - if @interaction
+      = f.input :interaction, as: :hidden,
+              input_html: {name: "content[interaction_id]", value: @interaction.id, "data-klass" => "Content"}
+      label
+        .control-label Interaction
+      h3 = @interaction.title
+        |
+    - else
+      = fae_association f, :interaction
+
+    = fae_input f, :title
+    = fae_pulldown f, :content_type, collection: Content::TYPES
+    = fae_input f, :description
+    = fae_input f, :copy
+    = fae_input f, :score
+    = fae_input f, :descriptor
+
+
+    = fae_image_form f, :stimulus
