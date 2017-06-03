@@ -1,6 +1,5 @@
 class InteractionsController < ApplicationController
   before_action :set_goal
-  before_action :set_goal_interaction, only: [:show, :update, :destroy]
 
   # GET /goals/:goal_id/interactions
   def index
@@ -38,10 +37,10 @@ class InteractionsController < ApplicationController
   end
 
   def set_goal
-    @goal = Goal.find(params[:goal_id])
+    # require the goal context for all interaction requests
+    return unless params[:goal_id]
+    @goal = Goal.preload(:interactions).find(params[:goal_id])
+    @interaction = Interaction.preload(:contents).find(params[:id]) if params[:id]
   end
 
-  def set_goal_interaction
-    @interaction = @goal.interactions.select {|i|  i[:id] = params[:id]}  if @goal
-  end
 end

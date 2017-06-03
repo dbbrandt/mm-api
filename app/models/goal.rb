@@ -5,7 +5,12 @@ class Goal < ApplicationRecord
     title
   end
 
+  validates_presence_of :title
+
   has_fae_image :hero_image
 
-  has_many :interactions
+  default_scope { order('title')}
+
+  has_many :interactions, :dependent => :destroy
+  has_many :contents, through: :interactions
 end
