@@ -35,7 +35,7 @@ class GoalsController < ApplicationController
 
   def goal_params
     # whitelist params
-    params.permit(:name)
+    params.permit(:title)
   end
 
   def set_goal
