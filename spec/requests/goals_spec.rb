@@ -53,13 +53,13 @@ RSpec.describe 'Goals API', type: :request do
   # Test suite for POST /goals
   describe 'POST /goals' do
     # valid payload
-    let(:valid_attributes) { { name: 'Learn Actor Names' } }
+    let(:valid_attributes) { { title: 'Learn Actor Names' } }
 
     context 'when the request is valid' do
       before { post '/goals', params: valid_attributes }
 
       it 'creates a goal' do
-        expect(json['name']).to eq('Learn Actor Names')
+        expect(json['title']).to eq('Learn Actor Names')
       end
 
       it 'returns status code 201' do
@@ -76,14 +76,14 @@ RSpec.describe 'Goals API', type: :request do
 
       it 'returns a validation failure message' do
         expect(response.body)
-            .to match(/Validation failed: Name can't be blank/)
+            .to match(/Validation failed: Title can't be blank/)
       end
     end
   end
 
   # Test suite for PUT /goals/:id
   describe 'PUT /goals/:id' do
-    let(:valid_attributes) { { name: 'Learn Actors Movies' } }
+    let(:valid_attributes) { { title: 'Learn Actors Movies' } }
 
     context 'when the record exists' do
       before { put "/goals/#{goal_id}", params: valid_attributes }
