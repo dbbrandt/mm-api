@@ -10,9 +10,9 @@ class Interaction < ApplicationRecord
   #acts_as_list add_new_at: :top
   default_scope { order('updated_at DESC') }
 
-  validates_presence_of :answer_type
+  validates_presence_of :title
   validates_inclusion_of :answer_type, in: TYPES
 
   belongs_to :goal
-  has_many :contents
+  has_many :contents, :dependent => :destroy
 end

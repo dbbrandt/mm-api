@@ -39,7 +39,7 @@ class GoalsController < ApplicationController
   end
 
   def set_goal
-    @goal = Goal.find(params[:id])
+    @goal = Goal.preload(:interactions, :contents).find(params[:id])
   end
 
 end

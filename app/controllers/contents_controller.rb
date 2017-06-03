@@ -37,11 +37,11 @@ class ContentsController < ApplicationController
   end
 
   def set_interaction
-    @interaction = Interaction.find(params[:interaction_id])
+    @interaction = Interaction.preload(:contents).find(params[:interaction_id])
   end
 
   def set_interaction_content
-    @content = @interaction.contents.select {|c| c[:id] == params[:id]} if @interaction
+    @content = @interaction.contents.find { |c| c.id == params[:id]} if @interaction
   end
 
 end
