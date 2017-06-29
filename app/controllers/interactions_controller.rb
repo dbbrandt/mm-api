@@ -33,7 +33,7 @@ class InteractionsController < ApplicationController
   private
 
   def interaction_params
-    params.permit(:name, :answer_type)
+    params.permit(:title, :answer_type)
   end
 
   def set_goal
