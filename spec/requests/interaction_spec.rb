@@ -3,56 +3,52 @@ require 'rails_helper'
 
 RSpec.describe 'interactions API', type: :request do
   # initialize test data
-  let!(:goal) { create}
-  let!(:interactions) { create_list(:interaction, 10) }
+  let!(:goal) { create(:goal) }
+  let!(:goal_id) { goal.id }
+  let!(:interactions) { create_list(:interaction, 10, goal: goal) }
   let(:interaction_id) { interactions.first.id }
+  let(:valid_attributes) { { title: 'Tom Hanks', answer_type: 'ShortAnswer' } }
+
 
   # Test reject requests that are not permitted for this resource
-  context 'requests without goal specified' do
+  context 'requests without a goal specified should fail' do
     describe 'GET /interacctions' do
-      it 'returns status code 200' do
-        get '/interactions'
-        expect(response).to have_http_status(405)
+      it 'fails to find the route' do
+        expect{ get "/interaction" }.to raise_error(ActionController::RoutingError)
       end
     end
 
     describe 'GET /interacctions/:id' do
-      it 'returns status code 405' do
-        get "/interactions/#{interaction_id}"
-        expect(response).to have_http_status(405)
+      it 'fails to find the route' do
+        expect{ get "/interactions/#{interaction_id}" }.to raise_error(ActionController::RoutingError)
       end
     end
 
     describe 'PUT /interacctions/:id' do
-      it 'returns status code 405' do
-        put "/interactions/#{interaction_id}"
-        expect(response).to have_http_status(405)
+      it 'fails to find the route' do
+        expect{ put "/interactions/#{interaction_id}" }.to raise_error(ActionController::RoutingError)
       end
     end
 
-    describe 'POST /interacctions/:id' do
-      it 'returns status code 405' do
-        post "/interactions/#{interaction_id}"
-        expect(response).to have_http_status(405)
+    describe 'POST /interactions' do
+      it 'fails to find the route' do
+        expect{ post "/interactions" }.to raise_error(ActionController::RoutingError)
       end
     end
 
     describe 'DELETE /interacctions/:id' do
-      it 'returns status code 405' do
-        delete "/interactions/#{interaction_id}"
-        expect(response).to have_http_status(405)
+      it 'fails to find the route' do
+        expect{ delete "/interactions/#{interaction_id}" }.to raise_error(ActionController::RoutingError)
       end
     end
-
   end
 
-
   # Test requests that scoped  to the goal
-  context 'requests goal specified' do
+  context 'requests a goal''s interactions' do
     # Test suite for GET /goal/:goal_id/interactions
-    describe 'GET /goal/:goal_id/interactions' do
+    describe 'GET /goals/:goal_id/interactions' do
       # make HTTP get request before each example
-      before { get '/interactions' }
+      before { get "/goals/#{goal_id}/interactions" }
 
       it 'returns interactions' do
         # Note `json` is a custom helper to parse JSON responses
@@ -65,11 +61,11 @@ RSpec.describe 'interactions API', type: :request do
       end
     end
 
-    # Test suite for GET /interactions/:id
+    # Test suite for GET /goal/:goal_id/interactions/:id
     describe 'GET /interactions/:id' do
-      before { get "/interactions/#{interaction_id}" }
-
       context 'when the record exists' do
+        before { get "/goals/#{goal_id}/interactions/#{interaction_id}" }
+
         it 'returns the interaction' do
           expect(json).not_to be_empty
           expect(json['id']).to eq(interaction_id)
@@ -81,14 +77,14 @@ RSpec.describe 'interactions API', type: :request do
       end
 
       context 'when the record does not exist' do
-        let(:interaction_id) { 100 }
+        before { get "/goals/#{goal_id}/interactions/1000" }
 
         it 'returns status code 404' do
           expect(response).to have_http_status(404)
         end
 
         it 'returns a not found message' do
-          expect(response.body).to match(/Couldn't find interaction/)
+          expect(response.body).to include("Couldn't find Interaction")
         end
       end
     end
@@ -96,10 +92,8 @@ RSpec.describe 'interactions API', type: :request do
     # Test suite for POST /interactions
     describe 'POST /interactions' do
       # valid payload
-      let(:valid_attributes) { { title: 'Tom Hanks' } }
-
       context 'when the request is valid' do
-        before { post '/interactions', params: valid_attributes }
+        before { post "/goals/#{goal_id}/interactions", params: valid_attributes }
 
         it 'creates a interaction' do
           expect(json['title']).to eq('Tom Hanks')
@@ -111,7 +105,7 @@ RSpec.describe 'interactions API', type: :request do
       end
 
       context 'when the request is invalid' do
-        before { post '/interactions', params: nil }
+        before { post "/goals/#{goal_id}/interactions", params: { title: "Meryl Streep"} }
 
         it 'returns status code 422' do
           expect(response).to have_http_status(422)
@@ -119,17 +113,16 @@ RSpec.describe 'interactions API', type: :request do
 
         it 'returns a validation failure message' do
           expect(response.body)
-              .to match(/Validation failed: Title can't be blank/)
+              .to match(/Validation failed: Answer type is not included in the list/)
         end
       end
     end
 
     # Test suite for PUT /interactions/:id
     describe 'PUT /interactions/:id' do
-      let(:valid_attributes) { { title: 'Meryl Streep' } }
 
       context 'when the record exists' do
-        before { put "/interactions/#{interaction_id}", params: valid_attributes }
+        before { put "/goals/#{goal_id}/interactions/#{interaction_id}", params: valid_attributes }
 
         it 'updates the record' do
           expect(response.body).to be_empty
@@ -139,14 +132,35 @@ RSpec.describe 'interactions API', type: :request do
           expect(response).to have_http_status(204)
         end
       end
+
+      context 'when the record does not exists' do
+        before { put "/goals/#{goal_id}/interactions/100", params: valid_attributes }
+
+        it 'returns status code 404' do
+          expect(response).to have_http_status(404)
+        end
+      end
+
+
     end
 
     # Test suite for DELETE /interactions/:id
-    describe 'DELETE /interactions/:id' do
-      before { delete "/interactions/#{interaction_id}" }
+    describe 'DELETE /goals/:goal_id/interactions/:id' do
 
-      it 'returns status code 204' do
-        expect(response).to have_http_status(204)
+      context 'when the record exists' do
+        before { delete "/goals/#{goal_id}/interactions/#{interaction_id}" }
+
+          it 'returns status code 204' do
+            expect(response).to have_http_status(204)
+          end
+        end
+
+      context 'when the record does not exists' do
+        before { delete "/goals/#{goal_id}/interactions/#{interaction_id}" }
+
+        it 'returns status code 204' do
+          expect(response).to have_http_status(204)
+        end
       end
     end
   end
