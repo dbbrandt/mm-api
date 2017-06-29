@@ -13,7 +13,7 @@ class InteractionsController < ApplicationController
 
   # POST /goals/:goal_id/interactions
   def create
-    @goal.interactions.create!(interaction_params)
+    @interaction = @goal.interactions.create!(interaction_params)
     json_response(@interaction, :created)
   end
 
