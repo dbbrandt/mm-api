@@ -96,14 +96,35 @@ RSpec.describe 'Goals API', type: :request do
         expect(response).to have_http_status(204)
       end
     end
+
+    context 'when the record does not exists' do
+      before { put "/goals/100", params: valid_attributes }
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
+    end
+
+
   end
 
   # Test suite for DELETE /goals/:id
   describe 'DELETE /goals/:id' do
-    before { delete "/goals/#{goal_id}" }
 
-    it 'returns status code 204' do
-      expect(response).to have_http_status(204)
+    context 'when the record exists' do
+      before { delete "/goals/#{goal_id}" }
+      it 'returns status code 204' do
+        expect(response).to have_http_status(204)
+      end
     end
+
+    context 'when the record does not exists' do
+      before { delete "/goals/100" }
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
+    end
+
+
   end
 end
