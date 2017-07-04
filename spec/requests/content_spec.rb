@@ -38,7 +38,7 @@ RSpec.describe 'Contents API', type: :request do
 
     describe 'DELETE /contents/:id' do
       it 'fails to find the route' do
-        expect{ delete "/contents/#{interaction_id}" }.to raise_error(ActionController::RoutingError)
+        expect{ delete "/contents/#{content_id}" }.to raise_error(ActionController::RoutingError)
       end
     end
   end

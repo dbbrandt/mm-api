@@ -12,7 +12,7 @@ RSpec.describe 'interactions API', type: :request do
 
   # Test reject requests that are not permitted for this resource
   context 'requests without a goal specified should fail' do
-    describe 'GET /interacctions' do
+    describe 'GET /interactions' do
       it 'fails to find the route' do
         expect{ get "/interaction" }.to raise_error(ActionController::RoutingError)
       end
