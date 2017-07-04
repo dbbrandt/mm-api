@@ -11,7 +11,7 @@ class Content < ApplicationRecord
 
   belongs_to :interaction
 
-  default_scope { order('updated_at DESC') }
+  default_scope { order(:title) }
 
   validates_presence_of :title
   validates_inclusion_of :content_type, in: TYPES

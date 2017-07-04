@@ -13,7 +13,7 @@ class InteractionsController < ApplicationController
 
   # POST /goals/:goal_id/interactions
   def create
-    @goal.interactions.create!(interaction_params)
+    @interaction = @goal.interactions.create!(interaction_params)
     json_response(@interaction, :created)
   end
 
@@ -33,7 +33,7 @@ class InteractionsController < ApplicationController
   private
 
   def interaction_params
-    params.permit(:name, :answer_type)
+    params.permit(:title, :answer_type)
   end
 
   def set_goal

@@ -9,7 +9,7 @@ class Goal < ApplicationRecord
 
   has_fae_image :hero_image
 
-  default_scope { order('title')}
+  default_scope { order(:title)}
 
   has_many :interactions, :dependent => :destroy
   has_many :contents, through: :interactions

@@ -4,7 +4,8 @@ Rails.application.routes.draw do
     resources :interactions
   end
 
-  resources :interactions do
+  # Allows only nested requests to contents.
+  resources :interactions, only: [] do
     resources :contents
   end
 
