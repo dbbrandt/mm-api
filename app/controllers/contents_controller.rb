@@ -1,6 +1,5 @@
 class ContentsController < ApplicationController
   before_action :set_interaction
-  before_action :set_interaction_content, only: [:show, :update, :destroy]
 
   # GET /interactions/:interaction_id/contents
   def index
@@ -9,23 +8,30 @@ class ContentsController < ApplicationController
 
   # GET /interactions/:interaction_id/contents/:id
   def show
-    json_response(@content)
+    set_interaction_content
+    return json_response("Couldn't find Content", :not_found) unless @content
+    json_response(@content, status)
   end
 
   # POST /interactions/:interaction_id/contents
   def create
-    @interaction.contents.create!(content_params)
+    @content = @interaction.contents.create!(content_params)
+    return json_response("Couldn't find Content", :not_found) unless @content
     json_response(@content, :created)
   end
 
   # PUT /interactions/:interaction_id/contents/:id
   def update
+    set_interaction_content
+    return json_response("Couldn't find Content", :not_found) unless @content
     @content.update(content_params)
     head :no_content
   end
 
   # DELETE /interactions/:interation_id/contents/:id
   def destroy
+    set_interaction_content
+    return json_response("Couldn't find Content", :not_found) unless @content
     @content.destroy
     head :no_content
   end
@@ -33,7 +39,7 @@ class ContentsController < ApplicationController
   private
 
   def content_params
-    params.permit(:type, :description, :image_url, :copy, :score, :descriptor)
+    params.permit(:title, :content_type, :description, :copy, :score, :descriptor)
   end
 
   def set_interaction
@@ -41,7 +47,7 @@ class ContentsController < ApplicationController
   end
 
   def set_interaction_content
-    @content = @interaction.contents.find { |c| c.id == params[:id]} if @interaction
+    @content = @interaction.contents.find { |c| c.id == params[:id].to_i} if @interaction
   end
 
 end

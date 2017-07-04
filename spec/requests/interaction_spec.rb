@@ -156,10 +156,10 @@ RSpec.describe 'interactions API', type: :request do
         end
 
       context 'when the record does not exists' do
-        before { delete "/goals/#{goal_id}/interactions/#{interaction_id}" }
+        before { delete "/goals/#{goal_id}/interactions/100" }
 
-        it 'returns status code 204' do
-          expect(response).to have_http_status(204)
+        it 'returns status code 404' do
+          expect(response).to have_http_status(404)
         end
       end
     end
