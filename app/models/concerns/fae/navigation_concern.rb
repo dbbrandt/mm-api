@@ -26,7 +26,8 @@ module Fae
     def structure
       [
         item('Goals', path: admin_goals_path),
-         # scaffold inject marker
+         item('Import Files', path: admin_import_files_path),
+        # scaffold inject marker
       ]
     end
 

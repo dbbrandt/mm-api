@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170507195311) do
+ActiveRecord::Schema.define(version: 20170706225139) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,19 @@ ActiveRecord::Schema.define(version: 20170507195311) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.index ["interaction_id"], name: "index_contents_on_interaction_id", using: :btree
+  end
+
+  create_table "contents_back", id: false, force: :cascade do |t|
+    t.integer  "id"
+    t.string   "title"
+    t.string   "content_type"
+    t.text     "description"
+    t.text     "copy"
+    t.float    "score"
+    t.text     "descriptor"
+    t.integer  "interaction_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "fae_changes", force: :cascade do |t|
@@ -75,6 +88,12 @@ ActiveRecord::Schema.define(version: 20170507195311) do
     t.datetime "updated_at"
     t.index ["attached_as"], name: "index_fae_images_on_attached_as", using: :btree
     t.index ["imageable_type", "imageable_id"], name: "index_fae_images_on_imageable_type_and_imageable_id", using: :btree
+  end
+
+  create_table "fae_images_backup", id: false, force: :cascade do |t|
+    t.integer "imageable_id"
+    t.integer "id"
+    t.string  "asset"
   end
 
   create_table "fae_options", force: :cascade do |t|
@@ -184,6 +203,15 @@ ActiveRecord::Schema.define(version: 20170507195311) do
     t.datetime "updated_at",   null: false
   end
 
+  create_table "import_files", force: :cascade do |t|
+    t.string   "title"
+    t.text     "json_data"
+    t.integer  "goal_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["goal_id"], name: "index_import_files_on_goal_id", using: :btree
+  end
+
   create_table "interactions", force: :cascade do |t|
     t.string   "title"
     t.string   "answer_type"
@@ -193,6 +221,12 @@ ActiveRecord::Schema.define(version: 20170507195311) do
     t.index ["goal_id"], name: "index_interactions_on_goal_id", using: :btree
   end
 
+  create_table "interactions_load", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.string "name"
+  end
+
   add_foreign_key "contents", "interactions"
+  add_foreign_key "import_files", "goals"
   add_foreign_key "interactions", "goals"
 end

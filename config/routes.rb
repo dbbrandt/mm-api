@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   resources :goals do
     resources :interactions
+    resources :import_files
   end
 
   # Allows only nested requests to contents.
@@ -10,6 +11,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    resources :import_files
     get '/', to: redirect('/admin/goals')
     resources :goals do
       resources :interactions

@@ -62,7 +62,7 @@ RSpec.describe 'Contents API', type: :request do
     end
 
     # Test suite for GET /interaction/:interaction_id/contents/:id
-    describe 'GET /contents/:id' do
+    describe 'GET /interaction/:interaction_id/contents/:id' do
       context 'when the record exists' do
         before { get "/interactions/#{interaction_id}/contents/#{content_id}" }
 
@@ -89,8 +89,8 @@ RSpec.describe 'Contents API', type: :request do
       end
     end
 
-    # Test suite for POST /contents
-    describe 'POST /contents' do
+    # Test suite for POST /interaction/:interaction_id/contents
+    describe 'POST /interaction/:interaction_id/contents' do
       # valid payload
       context 'when the request is valid' do
         before { post "/interactions/#{interaction_id}/contents", params: valid_attributes }
@@ -118,8 +118,8 @@ RSpec.describe 'Contents API', type: :request do
       end
     end
 
-    # Test suite for PUT /contents/:id
-    describe 'PUT /contents/:id' do
+    # Test suite for PUT /interaction/:interaction_id/contents/:id
+    describe 'PUT /interaction/:interaction_id/contents/:id' do
 
       context 'when the record exists' do
         before { put "/interactions/#{interaction_id}/contents/#{content_id}", params: valid_attributes }
@@ -144,7 +144,7 @@ RSpec.describe 'Contents API', type: :request do
 
     end
 
-    # Test suite for DELETE /contents/:id
+    # Test suite for DELETE /interaction/:interaction_id/contents/:id
     describe 'DELETE /interactions/:interaction_id/contents/:id' do
 
       context 'when the record exists' do

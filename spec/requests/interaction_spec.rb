@@ -62,7 +62,7 @@ RSpec.describe 'interactions API', type: :request do
     end
 
     # Test suite for GET /goal/:goal_id/interactions/:id
-    describe 'GET /interactions/:id' do
+    describe 'GET /goals/:goal_id/interactions/:id' do
       context 'when the record exists' do
         before { get "/goals/#{goal_id}/interactions/#{interaction_id}" }
 
@@ -89,8 +89,8 @@ RSpec.describe 'interactions API', type: :request do
       end
     end
 
-    # Test suite for POST /interactions
-    describe 'POST /interactions' do
+    # Test suite for POST /goals/:goal_id/interactions
+    describe 'POST /goals/:goal_id/interactions' do
       # valid payload
       context 'when the request is valid' do
         before { post "/goals/#{goal_id}/interactions", params: valid_attributes }
@@ -118,8 +118,8 @@ RSpec.describe 'interactions API', type: :request do
       end
     end
 
-    # Test suite for PUT /interactions/:id
-    describe 'PUT /interactions/:id' do
+    # Test suite for PUT /goals/:goal_id/interactions/:id
+    describe 'PUT /goals/:goal_id/interactions/:id' do
 
       context 'when the record exists' do
         before { put "/goals/#{goal_id}/interactions/#{interaction_id}", params: valid_attributes }
@@ -144,7 +144,7 @@ RSpec.describe 'interactions API', type: :request do
 
     end
 
-    # Test suite for DELETE /interactions/:id
+    # Test suite for DELETE /goals/:goal_id/interactions/:id
     describe 'DELETE /goals/:goal_id/interactions/:id' do
 
       context 'when the record exists' do
