@@ -3,16 +3,15 @@ require 'rails_helper'
 
 RSpec.describe 'import_file API', type: :request do
   # initialize test data
-  let(:csv_filename) { "test.csv" }
+  let(:csv_filename) { Rails.root.join "spec/fixtures/RubyQuiz.csv" }
   let!(:goal) { create(:goal) }
   let!(:goal_id) { goal.id }
   let!(:import_files) { create_list(:import_file, 10, goal: goal) }
   let(:import_file_id) { import_files.first.id }
-  let(:valid_attributes)  { { :title => 'Test Quiz', :file => "TODO - SIMULATE ACTUAL FILE" } }
+  let(:valid_attributes)  { { :title => 'Test Quiz', :csvfile => csv_filename } }
 
   let(:json_key) { "title" }
-  let(:json_value) { "Downside of strings" }
-  let(:json_value1) { "Cost of strings" }
+  let(:json_value) { "Ruby Developer" }
 
   # Test reject requests that are not permitted for this resource
   context 'requests without a goal specified should fail' do
@@ -88,7 +87,7 @@ RSpec.describe 'import_file API', type: :request do
           end
 
           it 'returns a not found message' do
-            expect(response.body).to include("Couldn't find Import File")
+            expect(response.body).to include("Couldn't find ImportFile")
           end
         end
       end
@@ -98,11 +97,12 @@ RSpec.describe 'import_file API', type: :request do
     describe 'POST /goal/:goal_id/import_files' do
       # valid payload
       context 'when the request is valid' do
-        #TODO handle params as a file upload
+        #For this test the filename is passed as an attribute and is local
         before { post "/goals/#{goal_id}/import_files", params: valid_attributes }
 
         it 'creates an import_file' do
-          expect( json_data[0][json_key] ).to eq(json_value)
+          @test = json
+          expect( JSON.parse(json['json_data'])[0][json_key] ).to eq(json_value)
         end
 
         it 'returns status code 201' do
@@ -119,7 +119,7 @@ RSpec.describe 'import_file API', type: :request do
 
         it 'returns a validation failure message' do
           expect(response.body)
-              .to match(/Validation failed: File not provided/)
+              .to match(/Validation failed: Json data can't be blank/)
         end
       end
     end
@@ -129,7 +129,6 @@ RSpec.describe 'import_file API', type: :request do
     describe 'PUT /goal/:goal_id/import_files/:id' do
 
       context 'when the record exists' do
-        #TODO handle params as a file upload
         before { put "/goals/#{goal_id}/import_files/#{import_file_id}", params: valid_attributes }
 
         it 'updates the record' do

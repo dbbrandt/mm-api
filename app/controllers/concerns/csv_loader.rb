@@ -7,12 +7,12 @@ module CsvLoader
   # Load a csv file into an array of hashes with the hearder row used for keys
   def load(file = @csv_filename)
     keys = nil
-    @json_data = []
+    csv_data = []
     CSV.foreach(file) do |row|
       keys = row unless keys
-      @json_data << Hash[keys.zip(row)]  unless keys == row
+      csv_data << Hash[keys.zip(row)]  unless keys == row
     end
-    @json_data
+    @json_data = csv_data.to_json
   end
 
 end
