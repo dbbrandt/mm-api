@@ -101,8 +101,7 @@ RSpec.describe 'import_file API', type: :request do
         before { post "/goals/#{goal_id}/import_files", params: valid_attributes }
 
         it 'creates an import_file' do
-          @test = json
-          expect( JSON.parse(json['json_data'])[0][json_key] ).to eq(json_value)
+          expect( json["json_data"][0][json_key] ).to eq(json_value)
         end
 
         it 'returns status code 201' do

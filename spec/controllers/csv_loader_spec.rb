@@ -7,7 +7,7 @@ RSpec.describe 'CSV Controller Concern', type: :controller do
   let(:json_value) { "Downside of strings" }
 
   before do
-    class ImportFileController < ApplicationController
+    class ImportController < ApplicationController
       include CsvLoader
     end
 
@@ -21,7 +21,7 @@ RSpec.describe 'CSV Controller Concern', type: :controller do
     File.delete(csv_filename)
   end
 
-  let(:importer) { ImportFileController.new }
+  let(:importer) { ImportController.new }
 
   describe "load csv file" do
     before do
@@ -29,7 +29,7 @@ RSpec.describe 'CSV Controller Concern', type: :controller do
     end
 
     it 'loads the correct data into json' do
-      expect( importer.json_data[0][json_key] ).to eq(json_value)
+      expect( JSON.parse(importer.json_data)[0][json_key] ).to eq(json_value)
     end
 
   end

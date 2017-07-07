@@ -11,13 +11,13 @@ class ImportFilesController < ApplicationController
 
   # GET /goals/:goal_id/import_files/:id
   def show
-    json_response(@import_file)
+    json_data_response(@import_file, :ok)
   end
 
   # POST /goals/:goal_id/import_files
   def create
     @import_file = @goal.import_files.create!(import_file_params)
-    json_response(@import_file, :created)
+    json_data_response(@import_file,:created)
   end
 
   # PUT /goals/:goal_id/import_files/:id
@@ -54,5 +54,20 @@ class ImportFilesController < ApplicationController
     else
       params[:json_data] = load(csvfile) if File.file?(csvfile)
     end
+  end
+
+  # json_data contains the csv_file rows. It's stored as a string.
+  # Convert the string to Json
+  def json_data_response(import_file, status )
+    response =
+    {
+        "id": import_file.id,
+        "title": import_file.title,
+        "goal_id": import_file.goal_id,
+        "created_at": import_file.created_at,
+        "updated_at": import_file.updated_at,
+        "json_data": JSON.parse(import_file.json_data)
+    }
+    json_response(response, status)
   end
 end
