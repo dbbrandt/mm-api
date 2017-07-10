@@ -11,4 +11,5 @@ class ImportFile < ApplicationRecord
   default_scope { order(:title)}
 
   belongs_to :goal
+  has_many :import_rows, dependent: :destroy
 end

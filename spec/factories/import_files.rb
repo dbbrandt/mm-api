@@ -1,4 +1,4 @@
-# spec/factories/interactions.rb
+# spec/factories/import_files.rb
 FactoryGirl.define do
   factory :import_file do
     title { Faker::Lorem.word }

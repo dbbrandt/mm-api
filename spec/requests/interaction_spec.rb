@@ -18,13 +18,13 @@ RSpec.describe 'interactions API', type: :request do
       end
     end
 
-    describe 'GET /interacctions/:id' do
+    describe 'GET /interactions/:id' do
       it 'fails to find the route' do
         expect{ get "/interactions/#{interaction_id}" }.to raise_error(ActionController::RoutingError)
       end
     end
 
-    describe 'PUT /interacctions/:id' do
+    describe 'PUT /interactions/:id' do
       it 'fails to find the route' do
         expect{ put "/interactions/#{interaction_id}" }.to raise_error(ActionController::RoutingError)
       end
@@ -36,7 +36,7 @@ RSpec.describe 'interactions API', type: :request do
       end
     end
 
-    describe 'DELETE /interacctions/:id' do
+    describe 'DELETE /interactions/:id' do
       it 'fails to find the route' do
         expect{ delete "/interactions/#{interaction_id}" }.to raise_error(ActionController::RoutingError)
       end
