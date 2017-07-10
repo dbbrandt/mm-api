@@ -14,7 +14,7 @@ RSpec.describe 'import_file API', type: :request do
   let(:json_value) { "Ruby Developer" }
 
   # Test reject requests that are not permitted for this resource
-  context 'requests without a goal specified should fail' do
+  context 'CRUD requests without a goal specified should fail' do
     describe 'GET /import_files' do
       it 'fails to find the route' do
         expect{ get "/import_Files" }.to raise_error(ActionController::RoutingError)
@@ -47,7 +47,7 @@ RSpec.describe 'import_file API', type: :request do
   end
 
   # Test requests that scoped  to the goal
-  context 'requests that are scoped to the goal' do
+  context 'CRUD requests that are scoped to a goal' do
     # Test suite for GET /goal/:goal_id/import_files
     describe 'GET /goals/:goal_id/import_files' do
       # make HTTP get request before each example
@@ -98,7 +98,11 @@ RSpec.describe 'import_file API', type: :request do
       # valid payload
       context 'when the request is valid' do
         #For this test the filename is passed as an attribute and is local
-        before { post "/goals/#{goal_id}/import_files", params: valid_attributes }
+        before do
+          post "/goals/#{goal_id}/import_files", params: valid_attributes
+          @import_file_id = json["id"]
+          @import_row_count = json["json_data"].size
+        end
 
         it 'creates an import_file' do
           expect( json["json_data"][0][json_key] ).to eq(json_value)
@@ -106,6 +110,11 @@ RSpec.describe 'import_file API', type: :request do
 
         it 'returns status code 201' do
           expect(response).to have_http_status(201)
+        end
+
+        it 'creates an import_rows' do
+          get "/import_files/#{@import_file_id}/import_rows"
+          expect( json.size ).to eq(@import_row_count)
         end
       end
 
@@ -128,7 +137,14 @@ RSpec.describe 'import_file API', type: :request do
     describe 'PUT /goal/:goal_id/import_files/:id' do
 
       context 'when the record exists' do
-        before { put "/goals/#{goal_id}/import_files/#{import_file_id}", params: valid_attributes }
+        # Do the creation twice to verify that the put replaces existing rows.
+        before do
+          put "/goals/#{goal_id}/import_files/#{import_file_id}", params: valid_attributes
+          get "/import_files/#{@import_file_id}/import_rows"
+          @first_row_id = json[0][:id]
+          put "/goals/#{goal_id}/import_files/#{import_file_id}", params: valid_attributes
+          @import_row_count = json["json_data"].size
+        end
 
         it 'updates the record' do
           expect(response.body).to be_empty
@@ -136,6 +152,13 @@ RSpec.describe 'import_file API', type: :request do
 
         it 'returns status code 204' do
           expect(response).to have_http_status(204)
+        end
+
+        #insure that all the import_rows are recreated
+        it 'recreates the import_rows' do
+          get "/import_files/#{@import_file_id}/import_rows"
+          expect( json.size ).to eq(@import_row_count)
+          expect( json[0][:id]).not_to eq(@first_row_id)
         end
       end
 
@@ -154,11 +177,11 @@ RSpec.describe 'import_file API', type: :request do
       context 'when the record exists' do
         before { delete "/goals/#{goal_id}/import_files/#{import_file_id}" }
 
-          it 'returns status code 204' do
-            expect(response).to have_http_status(204)
-          end
-
+        it 'returns status code 204' do
+          expect(response).to have_http_status(204)
         end
+
+      end
 
       context 'when the record does not exists' do
         before { delete "/goals/#{goal_id}/import_files/100" }
