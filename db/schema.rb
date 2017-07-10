@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170706225139) do
+ActiveRecord::Schema.define(version: 20170709190953) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -216,9 +216,11 @@ ActiveRecord::Schema.define(version: 20170706225139) do
     t.string   "title"
     t.string   "answer_type"
     t.integer  "goal_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.integer  "import_file_id"
     t.index ["goal_id"], name: "index_interactions_on_goal_id", using: :btree
+    t.index ["import_file_id"], name: "index_interactions_on_import_file_id", using: :btree
   end
 
   create_table "interactions_load", id: false, force: :cascade do |t|
@@ -229,4 +231,5 @@ ActiveRecord::Schema.define(version: 20170706225139) do
   add_foreign_key "contents", "interactions"
   add_foreign_key "import_files", "goals"
   add_foreign_key "interactions", "goals"
+  add_foreign_key "interactions", "import_files"
 end

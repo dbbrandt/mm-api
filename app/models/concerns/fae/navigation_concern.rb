@@ -27,6 +27,7 @@ module Fae
       [
         item('Goals', path: admin_goals_path),
          item('Import Files', path: admin_import_files_path),
+        item('Import Rows', path: admin_import_rows_path),
         # scaffold inject marker
       ]
     end
