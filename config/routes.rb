@@ -10,7 +10,14 @@ Rails.application.routes.draw do
     resources :contents
   end
 
-  namespace :admin do
+  resources :import_files, only: [] do
+    post 'interactions' => 'import_files#import'
+    get 'interactions' => 'import_files#interactions'
+    get 'interactions/:id' => 'import_files#interaction'
+    delete 'interactions' => 'import_files#interactions'
+  end
+
+namespace :admin do
     resources :import_files
     get '/', to: redirect('/admin/goals')
     resources :goals do
