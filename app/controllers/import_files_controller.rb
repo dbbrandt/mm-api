@@ -18,14 +18,20 @@ class ImportFilesController < ApplicationController
   def create
     #TODO show be atomic. Put these realated actions in a tractions (file and rows)
     @import_file = @goal.import_files.create!(import_file_params)
-    @import_file.create_import_rows
+    @import_file.create_rows
     json_data_response(:created)
   end
 
   # PUT /goals/:goal_id/import_files/:id
   def update
     @import_file.update(import_file_params)
-    head :no_content
+    errors = { errors: ["Unable to delete import_rows. Request failed."]} unless @import_file.delete_rows
+    @import_file.create_rows unless errors
+    if errors
+      json_response(errors, :bad_request)
+    else
+      head :no_content
+    end
   end
 
   # DELETE /goals/:goal_id/import_files/:id
