@@ -11,13 +11,15 @@ class ImportFilesController < ApplicationController
 
   # GET /goals/:goal_id/import_files/:id
   def show
-    json_data_response(@import_file, :ok)
+    json_data_response(:ok)
   end
 
   # POST /goals/:goal_id/import_files
   def create
+    #TODO show be atomic. Put these realated actions in a tractions (file and rows)
     @import_file = @goal.import_files.create!(import_file_params)
-    json_data_response(@import_file,:created)
+    @import_file.create_import_rows
+    json_data_response(:created)
   end
 
   # PUT /goals/:goal_id/import_files/:id
@@ -58,15 +60,15 @@ class ImportFilesController < ApplicationController
 
   # json_data contains the csv_file rows. It's stored as a string.
   # Convert the string to Json
-  def json_data_response(import_file, status )
+  def json_data_response( status )
     response =
     {
-        "id": import_file.id,
-        "title": import_file.title,
-        "goal_id": import_file.goal_id,
-        "created_at": import_file.created_at,
-        "updated_at": import_file.updated_at,
-        "json_data": JSON.parse(import_file.json_data)
+        "id": @import_file.id,
+        "title": @import_file.title,
+        "goal_id": @import_file.goal_id,
+        "created_at": @import_file.created_at,
+        "updated_at": @import_file.updated_at,
+        "json_data": JSON.parse(@import_file.json_data)
     }
     json_response(response, status)
   end
