@@ -141,9 +141,8 @@ RSpec.describe 'import_file API', type: :request do
         before do
           put "/goals/#{goal_id}/import_files/#{import_file_id}", params: valid_attributes
           get "/import_files/#{import_file_id}/import_rows"
-          @first_row_id = json[0][:id]
+          @first_row_id = json[0]["id"]
           put "/goals/#{goal_id}/import_files/#{import_file_id}", params: valid_attributes
-          @import_row_count = json["json_data"].size
         end
 
         it 'updates the record' do
@@ -154,10 +153,9 @@ RSpec.describe 'import_file API', type: :request do
           expect(response).to have_http_status(204)
         end
 
-        #insure that all the import_rows are recreated
+        #insure that new data is imported
         it 'recreates the import_rows' do
           get "/import_files/#{import_file_id}/import_rows"
-          expect( json.size ).to eq(@import_row_count)
           expect( json[0][:id]).not_to eq(@first_row_id)
         end
       end
