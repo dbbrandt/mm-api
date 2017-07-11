@@ -4,6 +4,7 @@ RSpec.describe Goal, type: :model do
   # Association test
   # ensure Goal model has a 1:m relationship with the Interaction model
   it { is_expected.to have_many(:interactions).dependent(:destroy) }
+  it { is_expected.to have_many(:import_files).dependent(:destroy) }
   it { is_expected.to have_many(:contents) }
 
   # Validation tests
