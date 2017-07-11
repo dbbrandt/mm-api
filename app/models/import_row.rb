@@ -5,6 +5,9 @@ class ImportRow < ApplicationRecord
     title
   end
 
+  # order by id for ease of review in sequential import
+  default_scope { order('id') }
+
   validates_presence_of :title
   validates_presence_of :json_data
 
