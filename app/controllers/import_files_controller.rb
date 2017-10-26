@@ -16,10 +16,10 @@ class ImportFilesController < ApplicationController
 
   # POST /goals/:goal_id/import_files
   def create
-    #TODO show be atomic. Put these realated actions in a tractions (file and rows)
+    #TODO should be atomic. Put these realated actions in a tractions (file and rows)
     @import_file = @goal.import_files.create!(import_file_params)
-    @import_file.create_rows
-    json_data_response(:created)
+    errors = @import_file.create_rows
+    json_data_response(:created, :errors)
   end
 
   # PUT /goals/:goal_id/import_files/:id
@@ -57,16 +57,18 @@ class ImportFilesController < ApplicationController
   def set_json_data
     csvfile = params[:csvfile]
     return unless csvfile
+    # See if the file was uploaded as a multipart file.
     if csvfile.respond_to?(:tempfile)
       params[:json_data] = load(csvfile.tempfile)
     else
+      # Load from a local file provided
       params[:json_data] = load(csvfile) if File.file?(csvfile)
     end
   end
 
   # json_data contains the csv_file rows. It's stored as a string.
   # Convert the string to Json
-  def json_data_response( status )
+  def json_data_response( status, errors = nil )
     response =
     {
         "id": @import_file.id,
@@ -74,7 +76,8 @@ class ImportFilesController < ApplicationController
         "goal_id": @import_file.goal_id,
         "created_at": @import_file.created_at,
         "updated_at": @import_file.updated_at,
-        "json_data": JSON.parse(@import_file.json_data)
+        "json_data": JSON.parse(@import_file.json_data),
+        "errors": errors
     }
     json_response(response, status)
   end

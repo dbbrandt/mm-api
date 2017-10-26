@@ -20,14 +20,16 @@ class ImportFile < ApplicationRecord
     return false if import_rows.size > 0
     rows = JSON.parse(json_data)
     row_count = 0
+    import_errors = []
     ActiveRecord::Base.transaction do
       rows.each do |row|
-        import_rows.create!(title: row["title"], json_data: row.to_json)
+        new_row = import_rows.create!(title: row["title"], json_data: row.to_json)
+        import_errors << "Row #{row_count}: #{new_row.errors} "
         row_count += 1
       end
     end
     reload
-    return row_count > 0
+    return import_errors
   end
 
   # Delete all rows not associated with an interaction

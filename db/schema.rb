@@ -28,19 +28,6 @@ ActiveRecord::Schema.define(version: 20170710204140) do
     t.index ["interaction_id"], name: "index_contents_on_interaction_id", using: :btree
   end
 
-  create_table "contents_back", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.string   "title"
-    t.string   "content_type"
-    t.text     "description"
-    t.text     "copy"
-    t.float    "score"
-    t.text     "descriptor"
-    t.integer  "interaction_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "fae_changes", force: :cascade do |t|
     t.integer  "changeable_id"
     t.string   "changeable_type"
@@ -88,12 +75,6 @@ ActiveRecord::Schema.define(version: 20170710204140) do
     t.datetime "updated_at"
     t.index ["attached_as"], name: "index_fae_images_on_attached_as", using: :btree
     t.index ["imageable_type", "imageable_id"], name: "index_fae_images_on_imageable_type_and_imageable_id", using: :btree
-  end
-
-  create_table "fae_images_backup", id: false, force: :cascade do |t|
-    t.integer "imageable_id"
-    t.integer "id"
-    t.string  "asset"
   end
 
   create_table "fae_options", force: :cascade do |t|
@@ -230,11 +211,6 @@ ActiveRecord::Schema.define(version: 20170710204140) do
     t.integer  "import_row_id"
     t.index ["goal_id"], name: "index_interactions_on_goal_id", using: :btree
     t.index ["import_row_id"], name: "index_interactions_on_import_row_id", using: :btree
-  end
-
-  create_table "interactions_load", id: false, force: :cascade do |t|
-    t.bigint "id"
-    t.string "name"
   end
 
   add_foreign_key "contents", "interactions"

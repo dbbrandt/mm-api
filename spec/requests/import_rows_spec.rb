@@ -6,9 +6,10 @@ RSpec.describe 'import_rows API', type: :request do
   let!(:goal) { create(:goal) }
   let!(:import_file) { create(:import_file, goal: goal) }
   let!(:import_file_id) { import_file.id }
-  let!(:import_rows) { create_list(:import_row, 10, import_file: import_file) }
+  let!(:import_row) { create(:import_row, import_file: import_file)}
+  let!(:import_rows) { create_list(:import_row, 9, import_file: import_file) }
   let(:import_row_id) { import_rows.first.id }
-  let(:valid_attributes) { { title: 'Tom Hanks', json_data: "{\"title\": \"#{Faker::Lorem.word}\",\"answer_type\": \"ShortAnswer\"}"  } }
+  let(:valid_attributes) { { title: 'Tom Hanks', json_data: "{\"title\": \"#{Faker::Lorem.word}\",\"answer_type\": \"ShortAnswer\",\"prompt\": #{Faker::Lorem.sentences(1)},\"criterion1\": #{Faker::Lorem.sentences(1)},\"copy1\": #{Faker::Lorem.sentences(1)},\"points1\": \"1\"}"  } }
 
 
   # Test reject requests that are not permitted for this resource
@@ -114,7 +115,7 @@ RSpec.describe 'import_rows API', type: :request do
 
         it 'returns a validation failure message' do
           expect(response.body)
-              .to match(/Validation failed: Json data can't be blank/)
+              .to match(/Validation failed: Json data can't be blank./)
         end
       end
     end
