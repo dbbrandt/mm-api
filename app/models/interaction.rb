@@ -15,4 +15,9 @@ class Interaction < ApplicationRecord
 
   belongs_to :goal
   has_many :contents, :dependent => :destroy
+
+  # Return the title if copy is not available
+  def copy
+    super || title
+  end
 end
