@@ -32,7 +32,7 @@ Closure Definitions,ShortAnswer,A true closure can ___________________ a variabl
 Closure Assignment,ShortAnswer,Whicy type of closure cannot be assigned to a variable,block,,1,,,,,,,,,
 Block Execution 1,ShortAnswer,In what context only can blocks be executed?,declaration,,1,their declaration,,1,,,,,,
 Block Return,ShortAnswer,"When a method accepting a block is called, which method is called to execute the block?",yield,,1,,,,,,,,,
-Block conversion,Shortanswer,Rewrite this method expecting a block to so that it convert the block to a proc: aMethod(block),aMethod(&block),,1,,,,,,,,,
+Block conversion,ShortAnswer,Rewrite this method expecting a block to so that it convert the block to a proc: aMethod(block),aMethod(&block),,1,,,,,,,,,
 Proc instantiation,ShortAnswer,A proc as opposed to a block is a(n) ___.,object,,1,,,,,,,,,
 Proc Declaration,ShortAnswer,"When a proc is declared, the declartion will include any or its ________.",arguments,,1,,,,,,,,,
 Proc Arguments,ShortAnswer,A what time are the values of proc arguments assigned?,declaration,,1,,,,,,,,,
