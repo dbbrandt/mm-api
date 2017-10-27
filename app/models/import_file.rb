@@ -19,12 +19,17 @@ class ImportFile < ApplicationRecord
     # Once rows are created from the json_date they cannot be recreated to avoid possible duplication.
     return false if import_rows.size > 0
     rows = JSON.parse(json_data)
-    row_count = 0
+    # account for title row
+    row_count = 2
     import_errors = []
     ActiveRecord::Base.transaction do
       rows.each do |row|
-        new_row = import_rows.create!(title: row["title"], json_data: row.to_json)
-        import_errors << "Row #{row_count}: #{new_row.errors} "
+        new_row = ImportRow.new(title: row["title"], json_data: row.to_json)
+        if new_row.valid?
+          import_rows.create!(title: row["title"], json_data: row.to_json)
+        else
+          import_errors << "Row #{row_count}: #{new_row.errors.messages}"
+        end
         row_count += 1
       end
     end
