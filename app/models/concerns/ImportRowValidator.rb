@@ -18,12 +18,12 @@ class ImportRowValidator < ActiveModel::Validator
       record.errors.add(:prompt, "can't be blank.")
     end
 
-    if row["criterion1"].blank? or row["copy1"].blank? or row["points1"].nil?
-      record.errors.add(:criterion, ": At least one complete criterion is required.")
+    if row["answer_type"].blank? or !(Interaction::TYPES.include?(row["answer_type"]))
+      record.errors.add(:answer_type, ": #{row["answer_type"]} must be a valid type (#{Interaction::TYPES.to_s})")
     end
 
-    if row["points1"].to_i+row["points2"].to_i+row["points3"].to_i+row["points4"].to_i == 0
-      record.errors.add(:points, ": At least one criterion with points is required")
+    if row["criterion1"].blank? or row["points1"].nil?
+      record.errors.add(:criterion, ": At least one complete criterion (title and ponits) is required.")
     end
 
   end
