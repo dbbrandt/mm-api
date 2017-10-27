@@ -101,7 +101,7 @@ RSpec.describe 'import_file API', type: :request do
         before do
           post "/goals/#{goal_id}/import_files", params: valid_attributes
           @import_file_id = json["id"]
-          @import_row_count = json["json_data"]
+          @import_row_count = json["json_data"].size
         end
 
         it 'creates an import_file' do
