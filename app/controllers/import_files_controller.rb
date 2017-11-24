@@ -19,7 +19,7 @@ class ImportFilesController < ApplicationController
     #TODO should be atomic. Put these realated actions in a tractions (file and rows)
     @import_file = @goal.import_files.create!(import_file_params)
     errors = @import_file.create_rows
-    json_data_response(:created, :errors)
+    json_data_response(:created, errors)
   end
 
   # PUT /goals/:goal_id/import_files/:id

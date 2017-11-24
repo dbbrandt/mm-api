@@ -28,7 +28,7 @@ class ImportFile < ApplicationRecord
         if new_row.valid?
           import_rows.create!(title: row["title"], json_data: row.to_json)
         else
-          import_errors << "Row #{row_count}: #{new_row.errors.messages}"
+          import_errors << { "Row #{row_count}": new_row.errors.full_messages }
         end
         row_count += 1
       end
