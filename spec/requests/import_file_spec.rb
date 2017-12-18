@@ -8,7 +8,9 @@ RSpec.describe 'import_file API', type: :request do
   let!(:goal_id) { goal.id }
   let!(:import_files) { create_list(:import_file, 10, goal: goal) }
   let(:import_file_id) { import_files.first.id }
-  let(:valid_attributes)  { { :title => 'Test Quiz', :csvfile => csv_filename } }
+  let(:random_title) { (0...20).map { (65 + rand(26)).chr }.join }
+  let(:valid_attributes)  { { :title => "#{Faker::Lorem.word}", :csvfile => csv_filename } }
+  let(:valid_params)  { { :title => random_title, :csvfile => csv_filename } }
 
   let(:json_key) { "title" }
   let(:json_value) { "Ruby Developer" }
@@ -99,7 +101,9 @@ RSpec.describe 'import_file API', type: :request do
       context 'when the request is valid' do
         #For this test the filename is passed as an attribute and is local
         before do
+          my_params = valid_params
           post "/goals/#{goal_id}/import_files", params: valid_attributes
+
           @import_file_id = json["id"]
           @import_row_count = json["json_data"].size
         end
@@ -189,5 +193,27 @@ RSpec.describe 'import_file API', type: :request do
         end
       end
     end
+
+    # Test suite for POST /goal/:goal_id/import_files/:id/generate
+    describe 'POST /goals/:goal_id/import_files/:id/generate' do
+
+      context 'when the import file exists' do
+        before { post "/goals/#{goal_id}/import_files/#{import_file_id}/generate" }
+
+        it 'returns status code 204' do
+          expect(response).to have_http_status(201)
+        end
+
+      end
+
+      context 'when the import file does not exists' do
+        before { post "/goals/#{goal_id}/import_files/100/generate" }
+
+        it 'returns status code 404' do
+          expect(response).to have_http_status(404)
+        end
+      end
+    end
+
   end
 end

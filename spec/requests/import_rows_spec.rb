@@ -120,6 +120,21 @@ RSpec.describe 'import_rows API', type: :request do
           end
         end
 
+        context 'when the title is a duplicate' do
+          before do
+            post "/import_files/#{import_file_id}/import_rows", params: valid_attributes
+            post "/import_files/#{import_file_id}/import_rows", params: valid_attributes
+          end
+
+          it 'returns status code 422' do
+            expect(response).to have_http_status(422)
+          end
+
+          it 'returns a validation failure message' do
+            expect(response.body).to match(/Validation failed: Title must be unique./)
+          end
+        end
+
         context 'when the json has invalid data' do
           before { post "/import_files/#{import_file_id}/import_rows", params: invalid_json_data }
 

@@ -2,7 +2,12 @@ Rails.application.routes.draw do
 
   resources :goals do
     resources :interactions
-    resources :import_files
+    resources :import_files do
+      member do
+        post :generate
+      end
+  end
+
   end
 
   # Allows only nested requests to contents.

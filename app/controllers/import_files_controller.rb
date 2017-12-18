@@ -40,6 +40,12 @@ class ImportFilesController < ApplicationController
     head :no_content
   end
 
+  # POST /goals/:goal_id/import_files/:id/generate
+  def generate
+    errors = generate_interactions
+    json_data_response(:created, errors)
+  end
+
   private
 
   def import_file_params
@@ -63,6 +69,60 @@ class ImportFilesController < ApplicationController
     else
       # Load from a local file provided
       params[:json_data] = load(csvfile) if File.file?(csvfile)
+    end
+  end
+
+  # for each import_rows in the import_file, insert or update based on the title
+  def generate_interactions
+    errors = []
+    @import_file.import_rows.each do |row|
+      interaction = generate_interaction(row)
+
+      if interaction
+        prompt = generate_prompt(interaction, row)
+        if prompt
+          (1..4).each do |number|
+            if json_criterion(row, number)
+              criterion = generate_criterion(row, number)
+              unless criterion
+                errors << {content: "Criterion #{number} row not created for row_id: #{row.id}"}
+              end
+            end
+          end
+        else
+          errors << {content: "Prompt row not created for row_id: #{row.id}"}
+        end
+      else
+        errors << {interaction: "Row not created for row_id: #{row.id}"}
+      end
+
+    end
+
+
+    errors
+  end
+
+  def generate_interaction(row)
+    interaction = Interaction.where(goal_id: @import_file.goal_id, import_row_id: row.id).first
+    if interaction
+      interaction.contents.delete_all
+    else
+      interaction = @goal.interactions.create!(title: row.title, answer_type: row.json["answer_type"], import_row_id: row.id)
+    end
+  end
+
+  def generate_prompt(interaction, row)
+    interaction.contents.create!(title: row.json["title"], content_type: 'Prompt', copy: row.json["prompt"])
+  end
+
+  def generate_criterion(row, number)
+    interaction.contents.create!(json_criterion(row, number))
+  end
+
+  def json_criterion(row, number)
+    if !row.json["criterion#{number}"].blank?
+      return {title: row.json["title"], content_type: 'Criterion', copy: row.json["copy#{number}"],
+          descriptor: row.json["criterion#{number}"], points: row.json["points#{number}"]}
     end
   end
 
