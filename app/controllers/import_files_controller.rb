@@ -136,9 +136,10 @@ class ImportFilesController < ApplicationController
         "goal_id": @import_file.goal_id,
         "created_at": @import_file.created_at,
         "updated_at": @import_file.updated_at,
-        "json_data": JSON.parse(@import_file.json_data),
-        "errors": errors
+        "json_data": JSON.parse(@import_file.json_data)
     }
+
+    response[:errors] = errors unless errors.nil?
     json_response(response, status)
   end
 end
