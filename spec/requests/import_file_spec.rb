@@ -4,13 +4,13 @@ require 'rails_helper'
 RSpec.describe 'import_file API', type: :request do
   # initialize test data
   let(:csv_filename) { Rails.root.join "spec/fixtures/RubyQuiz.csv" }
+  let(:invalid_csv_filename) { Rails.root.join "spec/fixtures/invalid_import.csv" }
   let!(:goal) { create(:goal) }
   let!(:goal_id) { goal.id }
   let!(:import_files) { create_list(:import_file, 10, goal: goal) }
   let(:import_file_id) { import_files.first.id }
-  let(:random_title) { (0...20).map { (65 + rand(26)).chr }.join }
   let(:valid_attributes)  { { :title => "#{Faker::Lorem.word}", :csvfile => csv_filename } }
-  let(:valid_params)  { { :title => random_title, :csvfile => csv_filename } }
+  let(:invalid_csv_attributes)  { { :title => "#{Faker::Lorem.word}", :csvfile => invalid_csv_filename } }
 
   let(:json_key) { "title" }
   let(:json_value) { "Ruby Developer" }
@@ -101,7 +101,6 @@ RSpec.describe 'import_file API', type: :request do
       context 'when the request is valid' do
         #For this test the filename is passed as an attribute and is local
         before do
-          my_params = valid_params
           post "/goals/#{goal_id}/import_files", params: valid_attributes
 
           @import_file_id = json["id"]
@@ -122,7 +121,7 @@ RSpec.describe 'import_file API', type: :request do
         end
       end
 
-      context 'when the request is invalid' do
+      context 'when the request parameter are invalid' do
         before { post "/goals/#{goal_id}/import_files", params: { title: "Test Quiz"} }
 
         it 'returns status code 422' do
@@ -132,6 +131,18 @@ RSpec.describe 'import_file API', type: :request do
         it 'returns a validation failure message' do
           expect(response.body)
               .to match(/Validation failed: Json data can't be blank/)
+        end
+      end
+
+      context 'when the csv file has errors' do
+        before { post "/goals/#{goal_id}/import_files", params: invalid_csv_attributes }
+
+        it 'returns status code 201' do
+          expect(response).to have_http_status(201)
+        end
+
+        it 'returns a validation error messages' do
+          expect(json["errors"].size).to be > 0
         end
       end
     end
