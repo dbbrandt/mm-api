@@ -83,7 +83,7 @@ class ImportFilesController < ApplicationController
         if prompt
           (1..4).each do |number|
             if json_criterion(row, number)
-              criterion = generate_criterion(row, number)
+              criterion = generate_criterion(interaction, row, number)
               unless criterion
                 errors << {content: "Criterion #{number} row not created for row_id: #{row.id}"}
               end
@@ -115,14 +115,15 @@ class ImportFilesController < ApplicationController
     interaction.contents.create!(title: row.json["title"], content_type: 'Prompt', copy: row.json["prompt"])
   end
 
-  def generate_criterion(row, number)
+  def generate_criterion(interaction, row, number)
     interaction.contents.create!(json_criterion(row, number))
   end
 
   def json_criterion(row, number)
     if !row.json["criterion#{number}"].blank?
-      return {title: row.json["title"], content_type: 'Criterion', copy: row.json["copy#{number}"],
-          descriptor: row.json["criterion#{number}"], points: row.json["points#{number}"]}
+      # Default copy to criterion if blank
+      return {title: row.json["title"], content_type: 'Criterion', copy: row.json["copy#{number}"] || row.json["criterion#{number}"],
+          descriptor: row.json["criterion#{number}"], score: row.json["points#{number}"]}
     end
   end
 
