@@ -131,7 +131,7 @@ RSpec.describe 'import_rows API', type: :request do
           end
 
           it 'returns a validation failure message' do
-            expect(response.body).to match(/Validation failed: Title must be unique./)
+            expect(response.body).to match(/Validation failed: Title has already been taken, Title must be unique./)
           end
         end
 

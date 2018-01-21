@@ -20,4 +20,9 @@ class Interaction < ApplicationRecord
   def copy
     super || title
   end
+
+  def stimulus_url
+    prompt = contents.where(content_type: 'Prompt').first
+    prompt&.stimulus&.asset&.url || ""
+  end
 end
