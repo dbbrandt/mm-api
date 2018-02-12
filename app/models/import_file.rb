@@ -1,6 +1,8 @@
 class ImportFile < ApplicationRecord
   include Fae::BaseModelConcern
 
+  attr_accessor :csv_file
+
   def fae_display_field
     title
   end
