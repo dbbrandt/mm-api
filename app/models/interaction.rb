@@ -22,7 +22,8 @@ class Interaction < ApplicationRecord
   end
 
   def stimulus_url
-    prompt = contents.where(content_type: 'Prompt').first
-    prompt&.stimulus&.asset&.url || ""
+    prompt = contents.where(content_type: Content::PROMPT).first
+    url = prompt.stimulus&.asset&.url || ""
+    url
   end
 end
