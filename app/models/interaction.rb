@@ -15,4 +15,15 @@ class Interaction < ApplicationRecord
 
   belongs_to :goal
   has_many :contents, :dependent => :destroy
+
+  # Return the title if copy is not available
+  def copy
+    super || title
+  end
+
+  def stimulus_url
+    prompt = contents.where(content_type: Content::PROMPT).first
+    url = prompt.stimulus&.asset&.url || ""
+    url
+  end
 end

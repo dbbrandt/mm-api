@@ -6,9 +6,11 @@ RSpec.describe 'import_rows API', type: :request do
   let!(:goal) { create(:goal) }
   let!(:import_file) { create(:import_file, goal: goal) }
   let!(:import_file_id) { import_file.id }
-  let!(:import_rows) { create_list(:import_row, 10, import_file: import_file) }
+  let!(:import_row) { create(:import_row, import_file: import_file)}
+  let!(:import_rows) { create_list(:import_row, 9, import_file: import_file) }
   let(:import_row_id) { import_rows.first.id }
-  let(:valid_attributes) { { title: 'Tom Hanks', json_data: "{\"title\": \"#{Faker::Lorem.word}\",\"answer_type\": \"ShortAnswer\"}"  } }
+  let(:valid_attributes) { { title: "Tom Hanks", json_data: "{\"title\": \"#{Faker::Lorem.word}\",\"answer_type\": \"ShortAnswer\",\"prompt\": #{Faker::Lorem.sentences(1)},\"criterion1\": #{Faker::Lorem.sentences(1)},\"copy1\": #{Faker::Lorem.sentences(1)},\"points1\": \"1\"}"  } }
+  let(:invalid_json_data) { { title: "Tom Hanks", json_data: "{\"title\": \"\",\"answer_type\": \"LongAnswer\",\"prompt\": \"\",\"criterion1\": \"\",\"copy1\": #{Faker::Lorem.sentences(1)},\"points1\": \"0\"}"  } }
 
 
   # Test reject requests that are not permitted for this resource
@@ -106,15 +108,46 @@ RSpec.describe 'import_rows API', type: :request do
       end
 
       context 'when the request is invalid' do
-        before { post "/import_files/#{import_file_id}/import_rows", params: { title: "Meryl Streep"} }
+        context 'when the json is blank' do
+          before { post "/import_files/#{import_file_id}/import_rows", params: { title: "Meryl Streep"} }
 
-        it 'returns status code 422' do
-          expect(response).to have_http_status(422)
+          it 'returns status code 422' do
+            expect(response).to have_http_status(422)
+          end
+
+          it 'returns a validation failure message' do
+            expect(response.body).to match(/Validation failed: Json data can't be blank./)
+          end
         end
 
-        it 'returns a validation failure message' do
-          expect(response.body)
-              .to match(/Validation failed: Json data can't be blank/)
+        context 'when the title is a duplicate' do
+          before do
+            post "/import_files/#{import_file_id}/import_rows", params: valid_attributes
+            post "/import_files/#{import_file_id}/import_rows", params: valid_attributes
+          end
+
+          it 'returns status code 422' do
+            expect(response).to have_http_status(422)
+          end
+
+          it 'returns a validation failure message' do
+            expect(response.body).to match(/Validation failed: Title has already been taken, Title must be unique./)
+          end
+        end
+
+        context 'when the json has invalid data' do
+          before { post "/import_files/#{import_file_id}/import_rows", params: invalid_json_data }
+
+          it 'returns status code 422' do
+            expect(response).to have_http_status(422)
+          end
+
+          it 'returns a validation failure message' do
+            expect(response.body).to match(/Validation failed: Prompt can't be blank./)
+            expect(response.body).to match(/Answer type must be a valid type/)
+            expect(response.body).to match(/At least one complete criterion/)
+            expect(response.body).to match(/Points : At least one criterion is required to have points./)
+          end
         end
       end
     end
@@ -141,8 +174,6 @@ RSpec.describe 'import_rows API', type: :request do
           expect(response).to have_http_status(404)
         end
       end
-
-
     end
 
     # Test suite for DELETE /import_files/:import_file_id/import_rows/:id

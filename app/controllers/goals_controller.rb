@@ -1,7 +1,6 @@
 class GoalsController < ApplicationController
-
   before_action :set_goal, only: [:show, :update, :destroy]
-
+  
   # GET /goals
   def index
     @goals = Goal.all

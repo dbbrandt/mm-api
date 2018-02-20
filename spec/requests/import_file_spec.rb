@@ -4,11 +4,13 @@ require 'rails_helper'
 RSpec.describe 'import_file API', type: :request do
   # initialize test data
   let(:csv_filename) { Rails.root.join "spec/fixtures/RubyQuiz.csv" }
+  let(:invalid_csv_filename) { Rails.root.join "spec/fixtures/invalid_import.csv" }
   let!(:goal) { create(:goal) }
   let!(:goal_id) { goal.id }
   let!(:import_files) { create_list(:import_file, 10, goal: goal) }
   let(:import_file_id) { import_files.first.id }
-  let(:valid_attributes)  { { :title => 'Test Quiz', :csvfile => csv_filename } }
+  let(:valid_attributes)  { { :title => "#{Faker::Lorem.word}", :csvfile => csv_filename } }
+  let(:invalid_csv_attributes)  { { :title => "#{Faker::Lorem.word}", :csvfile => invalid_csv_filename } }
 
   let(:json_key) { "title" }
   let(:json_value) { "Ruby Developer" }
@@ -100,6 +102,7 @@ RSpec.describe 'import_file API', type: :request do
         #For this test the filename is passed as an attribute and is local
         before do
           post "/goals/#{goal_id}/import_files", params: valid_attributes
+
           @import_file_id = json["id"]
           @import_row_count = json["json_data"].size
         end
@@ -118,7 +121,7 @@ RSpec.describe 'import_file API', type: :request do
         end
       end
 
-      context 'when the request is invalid' do
+      context 'when the request parameter are invalid' do
         before { post "/goals/#{goal_id}/import_files", params: { title: "Test Quiz"} }
 
         it 'returns status code 422' do
@@ -128,6 +131,18 @@ RSpec.describe 'import_file API', type: :request do
         it 'returns a validation failure message' do
           expect(response.body)
               .to match(/Validation failed: Json data can't be blank/)
+        end
+      end
+
+      context 'when the csv file has errors' do
+        before { post "/goals/#{goal_id}/import_files", params: invalid_csv_attributes }
+
+        it 'returns status code 201' do
+          expect(response).to have_http_status(201)
+        end
+
+        it 'returns a validation error messages' do
+          expect(json["errors"].size).to be > 0
         end
       end
     end
@@ -189,5 +204,27 @@ RSpec.describe 'import_file API', type: :request do
         end
       end
     end
+
+    # Test suite for POST /goal/:goal_id/import_files/:id/generate
+    describe 'POST /goals/:goal_id/import_files/:id/generate' do
+
+      context 'when the import file exists' do
+        before { post "/goals/#{goal_id}/import_files/#{import_file_id}/generate" }
+
+        it 'returns status code 204' do
+          expect(response).to have_http_status(201)
+        end
+
+      end
+
+      context 'when the import file does not exists' do
+        before { post "/goals/#{goal_id}/import_files/100/generate" }
+
+        it 'returns status code 404' do
+          expect(response).to have_http_status(404)
+        end
+      end
+    end
+
   end
 end

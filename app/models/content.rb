@@ -1,7 +1,10 @@
 class Content < ApplicationRecord
   include Fae::BaseModelConcern
 
-  TYPES = ['Prompt', 'Criterion']
+  PROMPT = 'Prompt'
+  CRITERION = 'Criterion'
+
+  TYPES = [PROMPT, CRITERION]
 
   def fae_display_field
     title

@@ -1,1 +1,17 @@
-== render 'form'
+= simple_form_for(['admin', @item]) do |f|
+  header.content-header.js-content-header
+    == render 'fae/shared/form_header', header: @klass_name
+  == render 'fae/shared/errors'
+
+  main.content
+    = fae_input f, :title
+
+    h3.control-label CSV Import File
+
+    = f.file_field :csv_file
+
+    h3
+
+    = fae_input f, :json_data
+
+    = fae_association f, :goal
