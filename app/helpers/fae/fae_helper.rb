@@ -21,6 +21,16 @@ module Fae
       end
     end
 
+    def fae_generate_button(item, edit_path = nil, *custom_attrs)
+      return if item.blank?
+      gen_path ||= polymorphic_path([main_app, fae_scope, item.try(:fae_parent), item])+"/generate"
+      attrs = { title: 'Generate', class: 'js-tooltip table-action' }
+      attrs.deep_merge!(custom_attrs[0]) if custom_attrs.present?
+      link_to gen_path, attrs do
+        concat content_tag :i, nil, class: 'icon-plus'
+      end
+    end
+
 
   end
 end
