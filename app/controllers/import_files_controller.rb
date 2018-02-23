@@ -16,21 +16,32 @@ class ImportFilesController < ApplicationController
 
   # POST /goals/:goal_id/import_files
   def create
-    #TODO should be atomic. Put these realated actions in a tractions (file and rows)
-    @import_file = @goal.import_files.create!(import_file_params)
-    errors = @import_file.create_rows
-    json_data_response(:created, errors)
+    ImportFile.transaction do
+      @import_file = @goal.import_files.create!(import_file_params)
+      row_errors = @import_file.create_rows
+      unless row_errors.empty?
+        @import_file.errors.add(:create_rows, row_errors)
+        raise ActiveRecord::Rollback
+      end
+    end
+    json_data_response(:created, @import_file.errors)
   end
 
   # PUT /goals/:goal_id/import_files/:id
   def update
-    @import_file.update(import_file_params)
-    errors = { errors: ["Unable to delete import_rows. Request failed."]} unless @import_file.delete_rows
-    @import_file.create_rows unless errors
-    if errors
-      json_response(errors, :bad_request)
-    else
-      head :no_content
+    ImportFile.transaction do
+      @import_file.update(import_file_params)
+
+      rows_deleted = @import_file.delete_rows
+      @import_file.errors.add(:import_rows, "Unable to delete import_rows. Request failed.") unless rows_deleted
+      @import_file.create_rows if rows_deleted
+
+      if @import_file.errors.empty?
+        head :no_content
+      else
+        raise ActiveRecord::Rollback
+        json_response(@import_file.errors, :bad_request)
+      end
     end
   end
 

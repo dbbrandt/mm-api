@@ -3,7 +3,8 @@ require 'rails_helper'
 
 RSpec.describe 'Contents API', type: :request do
   # initialize test data
-  let!(:interaction) { create(:interaction) }
+  let!(:goal) { create(:goal) }
+  let!(:interaction) { create(:interaction, goal: goal) }
   let!(:interaction_id) { interaction.id }
   let!(:contents) { create_list(:content, 10, interaction: interaction) }
   let(:content_id) { contents.first.id }

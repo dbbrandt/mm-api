@@ -13,7 +13,6 @@ RSpec.describe ImportFile, type: :model do
 
   let!(:goal) { create(:goal) }
   let!(:import_file) { create(:import_file, goal: goal) }
-  let!(:interaction) { create(:interaction, goal: goal) }
 
   describe 'create_rows from import file' do
     context 'related import_rows do not already exist' do
@@ -45,6 +44,17 @@ RSpec.describe ImportFile, type: :model do
       import_file.delete_rows
       import_file.reload
       expect(import_file.import_rows.size).to eq(0)
+    end
+  end
+
+  describe 'generate interactions for import rows' do
+    before { import_file.create_rows }
+
+    it 'generates interaction rows' do
+      expect(goal.interactions.size).to eq(0)
+      import_file.generate_interactions
+      goal.reload
+      expect(goal.interactions.size).to be > 0
     end
   end
 end

@@ -2,6 +2,11 @@ module Admin
   class ImportFilesController < Fae::BaseController
     include CsvLoader
 
+    def new
+      super
+      @item.json_data = "Replace with valid JSON if not using file."
+    end
+
     def create
       return create_from_existing(params[:from_existing]) if params[:from_existing].present?
 
@@ -11,7 +16,7 @@ module Admin
       ImportFile.transaction do
         if @item.save
           errors = @item.create_rows
-          if !errors.empty?
+          unless errors.empty?
             @item.errors.add(:json_data, errors) unless errors.empty?
             raise ActiveRecord::Rollback
           end

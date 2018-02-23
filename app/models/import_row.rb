@@ -12,7 +12,7 @@ class ImportRow < ApplicationRecord
   # order by id for ease of review in sequential import
   default_scope { order('id') }
 
-  belongs_to :import_filer, required: true
+  belongs_to :import_file, required: true
   has_one :interaction
 
   def json
