@@ -83,7 +83,7 @@ class ImportFile < ApplicationRecord
 
   # for each import_rows in the import_file, insert or update based on the title
   def generate_interactions
-    errors = []
+    insert_errors = []
     ImportFile.transaction do
       import_rows.each do |row|
         interaction = generate_interaction(row)
@@ -100,15 +100,15 @@ class ImportFile < ApplicationRecord
               end
             end
           else
-            errors << {content: "Prompt row not created for row_id: #{row.id}"}
+            insert_errors << {content: "Prompt row not created for row_id: #{row.id}"}
           end
         else
-          errors << {interaction: "Row not created for row_id: #{row.id}"}
+          insert_errors << {interaction: "Row not created for row_id: #{row.id}"}
         end
       end
-      raise ActiveRecord::Rollback if errors
+      raise ActiveRecord::Rollback unless insert_errors
     end
-    errors
+    insert_errors
   end
 
   def generate_interaction(row)
