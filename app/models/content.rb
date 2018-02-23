@@ -12,7 +12,7 @@ class Content < ApplicationRecord
   
   has_fae_image :stimulus
 
-  belongs_to :interaction
+  belongs_to :interaction, required: true
 
   default_scope { order(:title) }
 

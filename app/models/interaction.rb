@@ -13,7 +13,7 @@ class Interaction < ApplicationRecord
   validates_presence_of :title
   validates_inclusion_of :answer_type, in: TYPES
 
-  belongs_to :goal
+  belongs_to :goal, required: true
   has_many :contents, :dependent => :destroy
 
   # Return the title if copy is not available
