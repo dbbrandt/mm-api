@@ -25,27 +25,28 @@ class ImportFile < ApplicationRecord
     # account for title row
     row_count = 2
     import_errors = []
-    import_rows = []
+    added_rows = []
     rows.each do |row|
-      new_row = ImportRow.new(title: row["title"], json_data: row.to_json)
+      # new_row = ImportRow.new(import_file_id: import_file_id, title: row["title"], json_data: row.to_json)
+      new_row = ImportRow.new(import_file: self, title: row["title"], json_data: row.to_json)
       logger.info "Create Rows: creating row #{row_count} with title #{new_row.title}."
       if new_row.valid?
-        import_rows << new_row
+        added_rows << new_row
       else
         logger.error "Create Rows: error on row #{row_count}: #{new_row.errors.full_messages}."
         import_errors << { "Row #{row_count}": new_row.errors.full_messages.join(",") }
-    end
+      end
       row_count += 1
     end
-    import_errors = validate_rows(import_errors,import_rows)
+    import_errors = validate_rows(import_errors,added_rows)
     logger.error "Create Rows: row creation aborted. #{import_errors.count} validation errors."
     if import_errors.empty?
-      save_rows(import_rows)
+      save_rows(added_rows)
     else
       import_errors << { "Rows #{row_count-1}": "Import rows not created. #{import_errors.count} validation errors." }
     end
-    reload
-    return import_errors
+    #reload
+    import_errors
   end
 
   # Perform cross row validations like custom uniqueness constraints
@@ -61,9 +62,11 @@ class ImportFile < ApplicationRecord
   end
 
   def save_rows(rows)
-    rows.each_with_index do |row, index|
-      logger.debug "Save Rows: Saving. #{index} rows: #{row.title}."
-      import_rows.create!(title: row.title, json_data: row.json_data)
+    ImportFile.transaction do
+      rows.each_with_index do   | row, index|
+        logger.debug "Save Rows: Saving. #{index} rows: #{row.title}."
+        import_rows.create!(title: row.title, json_data: row.json_data)
+      end
     end
   end
 
@@ -71,10 +74,8 @@ class ImportFile < ApplicationRecord
   # Return true if all rows deleted.
   def delete_rows
     return true if import_rows.size == 0
-    ActiveRecord::Base.transaction do
-      import_rows.each do |row|
-        row.destroy unless row.interaction
-      end
+    import_rows.each do |row|
+      row.destroy unless row.interaction
     end
     reload
     return import_rows.size == 0
@@ -83,26 +84,29 @@ class ImportFile < ApplicationRecord
   # for each import_rows in the import_file, insert or update based on the title
   def generate_interactions
     errors = []
-    import_rows.each do |row|
-      interaction = generate_interaction(row)
+    ImportFile.transaction do
+      import_rows.each do |row|
+        interaction = generate_interaction(row)
 
-      if interaction
-        prompt = generate_prompt(interaction, row)
-        if prompt
-          (1..4).each do |number|
-            if json_criterion(row, number)
-              criterion = generate_criterion(interaction, row, number)
-              unless criterion
-                errors << {content: "Criterion #{number} row not created for row_id: #{row.id}"}
+        if interaction
+          prompt = generate_prompt(interaction, row)
+          if prompt
+            (1..4).each do |number|
+              if json_criterion(row, number)
+                criterion = generate_criterion(interaction, row, number)
+                unless criterion
+                  errors << {content: "Criterion #{number} row not created for row_id: #{row.id}"}
+                end
               end
             end
+          else
+            errors << {content: "Prompt row not created for row_id: #{row.id}"}
           end
         else
-          errors << {content: "Prompt row not created for row_id: #{row.id}"}
+          errors << {interaction: "Row not created for row_id: #{row.id}"}
         end
-      else
-        errors << {interaction: "Row not created for row_id: #{row.id}"}
       end
+      raise ActiveRecord::Rollback if errors
     end
     errors
   end
@@ -125,9 +129,9 @@ class ImportFile < ApplicationRecord
   end
 
   def json_criterion(row, number)
-    if !row.json["criterion#{number}"].blank?
+    unless row.json["criterion#{number}"].blank?
       # Default copy to criterion if blank
-      return {title: row.json["title"], content_type: 'Criterion', copy: row.json["copy#{number}"] || row.json["criterion#{number}"],
+      {title: row.json["title"], content_type: 'Criterion', copy: row.json["copy#{number}"] || row.json["criterion#{number}"],
               descriptor: row.json["criterion#{number}"], score: row.json["points#{number}"]}
     end
   end

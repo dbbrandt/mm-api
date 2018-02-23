@@ -16,7 +16,6 @@ class ImportFilesController < ApplicationController
 
   # POST /goals/:goal_id/import_files
   def create
-    #TODO should be atomic. Put these realated actions in a tractions (file and rows)
     ImportFile.transaction do
       @import_file = @goal.import_files.create!(import_file_params)
       row_errors = @import_file.create_rows
