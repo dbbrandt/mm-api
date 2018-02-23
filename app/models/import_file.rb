@@ -12,7 +12,7 @@ class ImportFile < ApplicationRecord
 
   default_scope { order(:title)}
 
-  belongs_to :goal
+  belongs_to :goal, required: true
   has_many :import_rows, dependent: :destroy
 
   # Create all the import_rows from the json_data
@@ -80,7 +80,57 @@ class ImportFile < ApplicationRecord
     return import_rows.size == 0
   end
 
+  # for each import_rows in the import_file, insert or update based on the title
+  def generate_interactions
+    errors = []
+    import_rows.each do |row|
+      interaction = generate_interaction(row)
 
+      if interaction
+        prompt = generate_prompt(interaction, row)
+        if prompt
+          (1..4).each do |number|
+            if json_criterion(row, number)
+              criterion = generate_criterion(interaction, row, number)
+              unless criterion
+                errors << {content: "Criterion #{number} row not created for row_id: #{row.id}"}
+              end
+            end
+          end
+        else
+          errors << {content: "Prompt row not created for row_id: #{row.id}"}
+        end
+      else
+        errors << {interaction: "Row not created for row_id: #{row.id}"}
+      end
+    end
+    errors
+  end
+
+  def generate_interaction(row)
+    interaction = Interaction.where(goal_id: goal_id, import_row_id: row.id).first
+    if interaction
+      interaction.contents.delete_all
+    else
+      interaction = goal.interactions.create!(title: row.title, answer_type: row.json["answer_type"], import_row_id: row.id)
+    end
+  end
+
+  def generate_prompt(interaction, row)
+    interaction.contents.create!(title: row.json["title"], content_type: 'Prompt', copy: row.json["prompt"])
+  end
+
+  def generate_criterion(interaction, row, number)
+    interaction.contents.create!(json_criterion(row, number))
+  end
+
+  def json_criterion(row, number)
+    if !row.json["criterion#{number}"].blank?
+      # Default copy to criterion if blank
+      return {title: row.json["title"], content_type: 'Criterion', copy: row.json["copy#{number}"] || row.json["criterion#{number}"],
+              descriptor: row.json["criterion#{number}"], score: row.json["points#{number}"]}
+    end
+  end
 
 end
 

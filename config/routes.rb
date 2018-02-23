@@ -23,6 +23,9 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :import_files do
       resources :import_rows
+      member do
+        get :generate
+      end
     end
     get '/', to: redirect('/admin/goals')
     resources :goals do

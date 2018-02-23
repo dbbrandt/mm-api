@@ -6,9 +6,10 @@ main.content
       tr
         th width='20%' Goal
         th Name
+        th.-action data-sorter="false"
+        th.-action data-sorter="false"
+        th.-action data-sorter="false"
         th.-action-wide Modified
-        th.-action data-sorter="false"
-        th.-action data-sorter="false"
 
     tbody
       - if @items.present?
@@ -16,6 +17,7 @@ main.content
           tr id=fae_sort_id(item)
             td = item.goal.title
             td = link_to item.fae_display_field, admin_import_file_import_rows_path(item)
+            td = fae_generate_button item
             td = fae_edit_button item
             td = fae_delete_button item
             td = fae_date_format item.updated_at
