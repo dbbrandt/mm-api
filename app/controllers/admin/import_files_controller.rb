@@ -2,6 +2,11 @@ module Admin
   class ImportFilesController < Fae::BaseController
     include CsvLoader
 
+    def new
+      super
+      @item.json_data = "Replace with valid JSON if not using file."
+    end
+
     def create
       return create_from_existing(params[:from_existing]) if params[:from_existing].present?
 
