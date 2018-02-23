@@ -11,7 +11,7 @@ module Admin
       ImportFile.transaction do
         if @item.save
           errors = @item.create_rows
-          if !errors.empty?
+          unless errors.empty?
             @item.errors.add(:json_data, errors) unless errors.empty?
             raise ActiveRecord::Rollback
           end
