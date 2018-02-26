@@ -8,7 +8,7 @@ class InteractionsController < ApplicationController
 
   # GET /goals/:goal_id/interactions/:id
   def show
-    json_response(@interaction)
+    json_response(params["deep"] ? deep_response : @interaction )
   end
 
   # POST /goals/:goal_id/interactions
@@ -43,4 +43,31 @@ class InteractionsController < ApplicationController
     @interaction = Interaction.preload(:contents).find(params[:id]) if params[:id]
   end
 
+  def deep_response
+     i = @interaction
+     p = @interaction.prompt
+    {
+      "id": i.id,
+      "title": i.title,
+      "answer_type": i.answer_type,
+      "prompt": {
+        "title": p.title,
+        "copy": p.copy,
+        "stimulus_url": i.stimulus_url
+      },
+      "criterion": criterion_response
+    }
+  end
+
+  def criterion_response
+    resp = []
+    @interaction.criterion.each do |c|
+      resp << { "title": c.title,
+                    "description": c.description,
+                    "copy": c.copy,
+                    "descriptor": c.descriptor
+                  }
+    end
+    resp
+  end
 end
