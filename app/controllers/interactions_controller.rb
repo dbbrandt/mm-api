@@ -65,7 +65,8 @@ class InteractionsController < ApplicationController
       resp << { "title": c.title,
                     "description": c.description,
                     "copy": c.copy,
-                    "descriptor": c.descriptor
+                    "descriptor": c.descriptor,
+                    "score": c.score
                   }
     end
     resp
