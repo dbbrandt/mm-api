@@ -7,9 +7,9 @@ RSpec.describe 'Goals API', type: :request do
   let(:goal_id) { goals.first.id }
 
   # Test suite for GET /goals
-  describe 'GET /goals' do
+  describe 'GET /api/goals' do
     # make HTTP get request before each example
-    before { get '/goals' }
+    before { get '/api/goals' }
 
     it 'returns goals' do
       # Note `json` is a custom helper to parse JSON responses
@@ -23,8 +23,8 @@ RSpec.describe 'Goals API', type: :request do
   end
 
   # Test suite for GET /goals/:id
-  describe 'GET /goals/:id' do
-    before { get "/goals/#{goal_id}" }
+  describe 'GET /api/goals/:id' do
+    before { get "/api/goals/#{goal_id}" }
 
     context 'when the record exists' do
       it 'returns the goal' do
@@ -51,12 +51,12 @@ RSpec.describe 'Goals API', type: :request do
   end
 
   # Test suite for POST /goals
-  describe 'POST /goals' do
+  describe 'POST /api/goals' do
     # valid payload
     let(:valid_attributes) { { title: 'Learn Actor Names' } }
 
     context 'when the request is valid' do
-      before { post '/goals', params: valid_attributes }
+      before { post '/api/goals', params: valid_attributes }
 
       it 'creates a goal' do
         expect(json['title']).to eq('Learn Actor Names')
@@ -68,7 +68,7 @@ RSpec.describe 'Goals API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/goals', params: nil }
+      before { post '/api/goals', params: nil }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -82,11 +82,11 @@ RSpec.describe 'Goals API', type: :request do
   end
 
   # Test suite for PUT /goals/:id
-  describe 'PUT /goals/:id' do
+  describe 'PUT /api/goals/:id' do
     let(:valid_attributes) { { title: 'Learn Actors Movies' } }
 
     context 'when the record exists' do
-      before { put "/goals/#{goal_id}", params: valid_attributes }
+      before { put "/api/goals/#{goal_id}", params: valid_attributes }
 
       it 'updates the record' do
         expect(response.body).to be_empty
@@ -98,33 +98,29 @@ RSpec.describe 'Goals API', type: :request do
     end
 
     context 'when the record does not exists' do
-      before { put "/goals/100", params: valid_attributes }
+      before { put "/api/goals/100", params: valid_attributes }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
       end
     end
-
-
   end
 
   # Test suite for DELETE /goals/:id
-  describe 'DELETE /goals/:id' do
+  describe 'DELETE /api/goals/:id' do
 
     context 'when the record exists' do
-      before { delete "/goals/#{goal_id}" }
+      before { delete "/api/goals/#{goal_id}" }
       it 'returns status code 204' do
         expect(response).to have_http_status(204)
       end
     end
 
     context 'when the record does not exists' do
-      before { delete "/goals/100" }
+      before { delete "/api/goals/100" }
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
       end
     end
-
-
   end
 end

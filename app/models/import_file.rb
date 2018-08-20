@@ -103,7 +103,7 @@ class ImportFile < ApplicationRecord
             insert_errors << {content: "Prompt row not created for row_id: #{row.id}"}
           end
         else
-          insert_errors << {interaction: "Row not created for row_id: #{row.id}"}
+          insert_errors << {interactions: "Row not created for row_id: #{row.id}"}
         end
       end
       raise ActiveRecord::Rollback unless insert_errors
