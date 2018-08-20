@@ -68,6 +68,7 @@ export default {
 }
 
 .nav-right {
+<<<<<<< HEAD
   float: right;
   margin-right: 5px;
   text-align: left;
@@ -84,6 +85,10 @@ and (-webkit-device-pixel-ratio : 3) {
     text-align: left;
     display: block;
   }
+=======
+  position: absolute;
+  right: 5px;
+>>>>>>> Initial Vue Commit with Build
 }
 
 .application-logo {

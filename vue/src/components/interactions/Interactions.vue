@@ -4,14 +4,24 @@
   </div>
   <div v-else>
     <template v-if="interactions">
+<<<<<<< HEAD
       <div class="refresh-form">
       as of <DateTime :value='loadTime' :timeIfToday='true'/>
         <v-btn flat v-on:click="loadInteractions" class="refresh-btn">refresh</v-btn>
         <v-text-field :full-width=false v-model="max_interactions" label="Questions" placeholder="questions?" outline />
+=======
+      <div style="float: right;">
+      as of <DateTime :value='loadTime' :timeIfToday='true'/>
+        <v-btn flat v-on:click="loadInteractions">refresh</v-btn>
+        <v-text-field :full-width=false v-model="max_interactions" label="Questions" placeholder="questions?" outline/>
+      </div>
+      <div style="float: left;">
+>>>>>>> Initial Vue Commit with Build
         {{interactions.length}} Interaction<Pluralize :count='interactions.length'></Pluralize> (
         Correct: {{ correct }} / {{ percent }}% )
       </div>
       <div class="form">
+<<<<<<< HEAD
         <div v-if="image_url">
           <img :src="image_url" class="stimulus_img">
         </div>
@@ -29,6 +39,19 @@
               <v-btn v-on:click="correctNext" class="vbutton">Correct</v-btn>
               <v-btn v-on:click="nextInteraction" class="vbutton">Nope</v-btn>
               <v-btn v-on:click="nextInteraction" class="vbutton">Skip</v-btn>
+=======
+        <img :src="image_url" class="stimulus_img">
+        <div v-if="prompt">
+          <v-btn flat v-on:click="showTitle">Show</v-btn>
+          <div v-if="show_title">
+            <div>
+              {{prompt.title}}
+            </div>
+            <div>
+              <v-btn flat small v-on:click="correctNext">Correct</v-btn>
+              <v-btn flat small v-on:click="nextInteraction">Nope</v-btn>
+              <v-btn flat small v-on:click="nextInteraction">Skip</v-btn>
+>>>>>>> Initial Vue Commit with Build
             </div>
           </div>
         </div>
@@ -44,13 +67,18 @@
     name: 'interactions',
     data() {
       return {
+<<<<<<< HEAD
         max_interactions: 50,
+=======
+        max_interactions: 4,
+>>>>>>> Initial Vue Commit with Build
         interactions: null,
         isLoading: false,
         show_title: false,
         loadTime: null,
         position: 0,
         correct: 0,
+<<<<<<< HEAD
         goal: null,
         reponse: '',
       };
@@ -71,6 +99,19 @@
       },
       answer() {
         return this.interaction.criterion[0].descriptor;
+=======
+      };
+    },
+    mounted() {
+      this.loadInteractions();
+    },
+    computed: {
+      prompt() {
+        return this.interactions[this.position].prompt;
+      },
+      image_url() {
+        return this.prompt.stimulus_url;
+>>>>>>> Initial Vue Commit with Build
       },
       percent() {
         return (this.position > 0) ? 100 * (this.correct / this.position) : 0;
@@ -88,7 +129,11 @@
       loadInteractions() {
         this.isLoading = true;
         this.resetPosition();
+<<<<<<< HEAD
         api.interactions.index(this.goal, this.max_interactions)
+=======
+        api.interactions.index(this.max_interactions)
+>>>>>>> Initial Vue Commit with Build
           .then((response) => {
             this.interactions = response;
             this.loadTime = new Date();
@@ -103,7 +148,10 @@
       },
       nextInteraction() {
         this.show_title = false;
+<<<<<<< HEAD
         this.response = '';
+=======
+>>>>>>> Initial Vue Commit with Build
         if (this.done) {
           this.position += 1;
           alert(`Completed. Correct: ${this.correct} Result: ${this.percent}%`);
@@ -129,6 +177,7 @@
   }
 
   .stimulus_img {
+<<<<<<< HEAD
     padding-top: 40px;
     width: 300px;
   }
@@ -182,10 +231,17 @@
     .input-group .input-group__input {
       font-size: 30px;
     }
+=======
+    padding-top: 20px;
+    height: 300px;
+>>>>>>> Initial Vue Commit with Build
   }
 
   .title {
     h-align: center;
   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> Initial Vue Commit with Build
 </style>

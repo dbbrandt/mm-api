@@ -6,7 +6,11 @@ const SKU_CHANGE_FLAG = '/sku_change_flags';
 const SKU_IMAGES = '/sku_images';
 const SKUS = '/skus';
 const GOALS = '/goals';
+<<<<<<< HEAD
 const INTERACTIONS = '/interactions';
+=======
+const INTERACTIONS = '/goals/1/interactions';
+>>>>>>> Initial Vue Commit with Build
 const PRICE_AND_COST_CHANGE_REQUESTS = '/price_and_cost_change_request';
 
 const endpoint = resource => API_ROOT + resource;
@@ -82,8 +86,13 @@ export default {
     },
   },
   interactions: {
+<<<<<<< HEAD
     index(goal, size) {
       return axios.get(`${endpoint(GOALS)}/${goal}${INTERACTIONS}`, { params: { size: `${size}`, deep: 'true' } })
+=======
+    index(size) {
+      return axios.get(`${endpoint(INTERACTIONS)}`, { params: { size: `${size}`, deep: 'true' } })
+>>>>>>> Initial Vue Commit with Build
         .then(response => response.data)
         .catch(handleError);
     },

@@ -21,8 +21,13 @@ export default {
     },
   },
   interactions: {
+<<<<<<< HEAD
     index(goal, size) {
       return api.interactions.index(goal, size);
+=======
+    index(size) {
+      return api.interactions.index(size);
+>>>>>>> Initial Vue Commit with Build
     },
     show(id) {
       return api.interactions.show(id);
