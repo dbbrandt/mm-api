@@ -26,6 +26,6 @@ test:
 production:
   <<: *default
   host: precidix-postgres.c28s3zrjaak1.us-east-1.rds.amazonaws.com
-  database: setagami
+  database: mm-api
   username: precidix
   password: precidix
