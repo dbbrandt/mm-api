@@ -6,10 +6,7 @@ set :repo_url, "git@github.com:dbbrandt/mm-api.git"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
-<<<<<<< HEAD
 set :branch, ENV['BRANCH'] if ENV['BRANCH']
-=======
->>>>>>> Add Capistrano for Deploy
 
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, "/home/precidix/srv/mm-api"
