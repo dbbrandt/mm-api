@@ -7,7 +7,7 @@ class CreateContents < ActiveRecord::Migration[5.0]
       t.text :copy
       t.float :score
       t.text :descriptor
-      t.references :interactions, foreign_key: true
+      t.references :interaction, foreign_key: true
 
       t.timestamps
     end
