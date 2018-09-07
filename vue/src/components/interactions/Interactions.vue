@@ -7,7 +7,7 @@
       <div style="float: right;">
       as of <DateTime :value='loadTime' :timeIfToday='true'/>
         <v-btn flat v-on:click="loadInteractions" style="font-size: 25px;">refresh</v-btn>
-        <v-text-field :full-width=false v-model="max_interactions" label="Questions" placeholder="questions?" outline/>
+        <v-text-field :full-width=false v-model="max_interactions" label="Questions" placeholder="questions?" outline style="font-size: 50px;"/>
       </div>
       <div style="float: left;">
         {{interactions.length}} Interaction<Pluralize :count='interactions.length'></Pluralize> (
@@ -16,15 +16,15 @@
       <div class="form">
         <img :src="image_url" class="stimulus_img">
         <div v-if="prompt">
-          <v-btn flat v-on:click="showTitle" style="font-size: 25px;">Show</v-btn>
+          <v-btn v-on:click="showTitle" class="vbutton">Show</v-btn>
           <div v-if="show_title">
-            <div>
+            <div class="answer">
               {{prompt.title}}
             </div>
             <div>
-              <v-btn flat small v-on:click="correctNext" style="font-size: 25px;">Correct</v-btn>
-              <v-btn flat small v-on:click="nextInteraction" style="font-size: 25px;">Nope</v-btn>
-              <v-btn flat small v-on:click="nextInteraction" style="font-size: 25px;">Skip</v-btn>
+              <v-btn v-on:click="correctNext" class="vbutton">Correct</v-btn>
+              <v-btn v-on:click="nextInteraction" class="vbutton">Nope</v-btn>
+              <v-btn v-on:click="nextInteraction" class="vbutton">Skip</v-btn>
             </div>
           </div>
         </div>
@@ -40,7 +40,7 @@
     name: 'interactions',
     data() {
       return {
-        max_interactions: 50,
+        max_interactions: 4,
         interactions: null,
         isLoading: false,
         show_title: false,
@@ -116,10 +116,21 @@
 
   .stimulus_img {
     padding-top: 20px;
-    height: 300px;
+    width: 50%;
   }
 
   .title {
     h-align: center;
   }
+
+  .answer {
+    font-size: 40px;
+    padding: 20px;
+  }
+
+  .vbutton {
+    height: 70px;
+    font-size: 50px;
+  }
+
 </style>
