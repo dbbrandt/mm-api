@@ -3,7 +3,15 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: $color-text;
-  font-size: 30px;
+
+  font-size: 16px;
+
+  @media only screen
+  and (min-device-width : 375px)
+  and (max-device-width : 812px)
+  and (-webkit-device-pixel-ratio : 3) {
+    font-size: 40px;
+  }
 }
 
 .api-limit-reached {

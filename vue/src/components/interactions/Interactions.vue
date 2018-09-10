@@ -4,12 +4,10 @@
   </div>
   <div v-else>
     <template v-if="interactions">
-      <div style="float: right;">
+      <div class="refresh-form">
       as of <DateTime :value='loadTime' :timeIfToday='true'/>
-        <v-btn flat v-on:click="loadInteractions" style="font-size: 25px;">refresh</v-btn>
-        <v-text-field :full-width=false v-model="max_interactions" label="Questions" placeholder="questions?" outline style="font-size: 50px;"/>
-      </div>
-      <div style="float: left;">
+        <v-btn flat v-on:click="loadInteractions" class="refresh-btn">refresh</v-btn>
+        <v-text-field :full-width=false v-model="max_interactions" label="Questions" placeholder="questions?" outline />
         {{interactions.length}} Interaction<Pluralize :count='interactions.length'></Pluralize> (
         Correct: {{ correct }} / {{ percent }}% )
       </div>
@@ -40,7 +38,7 @@
     name: 'interactions',
     data() {
       return {
-        max_interactions: 4,
+        max_interactions: 50,
         interactions: null,
         isLoading: false,
         show_title: false,
@@ -115,22 +113,58 @@
   }
 
   .stimulus_img {
-    padding-top: 20px;
-    width: 50%;
+    padding-top: 40px;
+    width: 300px;
+  }
+  .answer {
+    font-size: 20px;
+    padding: 20px;
+  }
+
+  .refresh-form {
+    float: right;
+    text-align: right;
+  }
+
+  .input-group--text-field .input {
+    font-size: 50px;
+  }
+
+  @media only screen
+    and (min-device-width : 375px)
+    and (max-device-width : 812px)
+    and (-webkit-device-pixel-ratio : 3) {
+    .stimulus_img {
+      padding-top: 20px;
+      width: 50%;
+    }
+    .answer {
+      font-size: 40px;
+      padding: 20px;
+    }
+
+    .vbutton {
+      height: 70px;
+      font-size: 40px;
+    }
+
+    .refresh-btn {
+      font-size: 30px;
+    }
+
+    .refresh-form {
+      padding-top: 40px;
+      float: left;
+      text-align: left;
+    }
+
+    .input-group .input-group__input {
+      font-size: 30px;
+    }
   }
 
   .title {
     h-align: center;
-  }
-
-  .answer {
-    font-size: 40px;
-    padding: 20px;
-  }
-
-  .vbutton {
-    height: 70px;
-    font-size: 50px;
   }
 
 </style>
