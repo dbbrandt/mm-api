@@ -6,7 +6,7 @@ const SKU_CHANGE_FLAG = '/sku_change_flags';
 const SKU_IMAGES = '/sku_images';
 const SKUS = '/skus';
 const GOALS = '/goals';
-const INTERACTIONS = '/goals/1/interactions';
+const INTERACTIONS = '/interactions';
 const PRICE_AND_COST_CHANGE_REQUESTS = '/price_and_cost_change_request';
 
 const endpoint = resource => API_ROOT + resource;
@@ -82,8 +82,8 @@ export default {
     },
   },
   interactions: {
-    index(size) {
-      return axios.get(`${endpoint(INTERACTIONS)}`, { params: { size: `${size}`, deep: 'true' } })
+    index(goal, size) {
+      return axios.get(`${endpoint(GOALS)}/${goal}${INTERACTIONS}`, { params: { size: `${size}`, deep: 'true' } })
         .then(response => response.data)
         .catch(handleError);
     },

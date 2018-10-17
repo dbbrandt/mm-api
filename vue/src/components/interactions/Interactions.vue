@@ -45,10 +45,12 @@
         loadTime: null,
         position: 0,
         correct: 0,
+        goal: null,
       };
     },
     mounted() {
-      this.loadInteractions();
+      this.goal = this.$route.params.id;
+      this.loadInteractions(this.goal);
     },
     computed: {
       prompt() {
@@ -73,7 +75,7 @@
       loadInteractions() {
         this.isLoading = true;
         this.resetPosition();
-        api.interactions.index(this.max_interactions)
+        api.interactions.index(this.goal, this.max_interactions)
           .then((response) => {
             this.interactions = response;
             this.loadTime = new Date();

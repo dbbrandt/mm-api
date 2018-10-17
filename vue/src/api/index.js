@@ -21,8 +21,8 @@ export default {
     },
   },
   interactions: {
-    index(size) {
-      return api.interactions.index(size);
+    index(goal, size) {
+      return api.interactions.index(goal, size);
     },
     show(id) {
       return api.interactions.show(id);

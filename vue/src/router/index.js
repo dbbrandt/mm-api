@@ -23,7 +23,7 @@ export default new Router({
       component: Goals,
     },
     {
-      path: '/interactions',
+      path: '/interactions/:id',
       name: 'Interactions',
       component: Interactions,
     },

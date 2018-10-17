@@ -11,7 +11,7 @@
     </thead>
     <tbody>
     <tr v-for="goal in goals">
-      <td class="u-align-left"><router-link :to="{ path: 'interactions', query: { goal_id: goal.goal_id }}">{{goal.title}}</router-link></td>
+      <td class="u-align-left"><router-link :to="{ path: `interactions/${goal.id}`}">{{goal.title}}</router-link></td>
       <td class="u-align-left">{{goal.description}}</td>
       <td class="u-align-left">{{goal.instructions}}</td>
       <td><DateTime :value='goal.created_at'></DateTime></td>
