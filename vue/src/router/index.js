@@ -23,11 +23,7 @@ export default new Router({
       component: Goals,
     },
     {
-<<<<<<< HEAD
       path: '/interactions/:id',
-=======
-      path: '/interactions',
->>>>>>> Initial Vue Commit with Build
       name: 'Interactions',
       component: Interactions,
     },

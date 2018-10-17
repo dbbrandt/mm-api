@@ -35,7 +35,6 @@ module.exports = {
               // pathRewrite: {
               //   '^/api': ''
               // }
-<<<<<<< HEAD
             },
           '/system': {
             target: 'http://localhost:3000',
@@ -44,9 +43,6 @@ module.exports = {
             //   '^/api': ''
             // }
           }
-=======
-            }
->>>>>>> Initial Vue Commit with Build
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README

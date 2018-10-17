@@ -12,19 +12,12 @@
         Correct: {{ correct }} / {{ percent }}% )
       </div>
       <div class="form">
-      <div class="form">
-        <div v-if="image_url">
-          <img :src="image_url" class="stimulus_img">
-        </div>
-        <div v-else class="prompt">
-          {{copy}}
-          <v-text-field :full-width=false v-model="response" label="Answer" placeholder="Answer?" outline />
-        </div>
-        <div v-if="answer">
+        <img :src="image_url" class="stimulus_img">
+        <div v-if="prompt">
           <v-btn v-on:click="showTitle" class="vbutton">Show</v-btn>
           <div v-if="show_title">
             <div class="answer">
-              {{answer}}
+              {{prompt.title}}
             </div>
             <div>
               <v-btn v-on:click="correctNext" class="vbutton">Correct</v-btn>
@@ -53,7 +46,6 @@
         position: 0,
         correct: 0,
         goal: null,
-        reponse: '',
       };
     },
     mounted() {
@@ -61,17 +53,11 @@
       this.loadInteractions(this.goal);
     },
     computed: {
-      interaction() {
-        return this.interactions[this.position];
+      prompt() {
+        return this.interactions[this.position].prompt;
       },
       image_url() {
-        return this.interaction.prompt.stimulus_url;
-      },
-      copy() {
-        return this.interaction.prompt.copy;
-      },
-      answer() {
-        return this.interaction.criterion[0].descriptor;
+        return this.prompt.stimulus_url;
       },
       percent() {
         return (this.position > 0) ? 100 * (this.correct / this.position) : 0;
@@ -104,7 +90,6 @@
       },
       nextInteraction() {
         this.show_title = false;
-        this.response = '';
         if (this.done) {
           this.position += 1;
           alert(`Completed. Correct: ${this.correct} Result: ${this.percent}%`);
@@ -133,11 +118,6 @@
     padding-top: 40px;
     width: 300px;
   }
-  .prompt {
-    font-size: 30px;
-    padding: 40px;
-  }
-
   .answer {
     font-size: 20px;
     padding: 20px;
