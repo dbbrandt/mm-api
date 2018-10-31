@@ -60,7 +60,6 @@
     },
     computed: {
       interaction() {
-        console.log(`interaction: ${this.interactions[this.position]}`);
         return this.interactions[this.position];
       },
       image_url() {
