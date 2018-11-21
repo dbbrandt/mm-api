@@ -17,7 +17,7 @@
         </div>
         <div v-else class="prompt">
           {{copy}}
-          <v-text-field :full-width=false label="Answer" placeholder="Answer?" outline />
+          <v-text-field :full-width=false v-model="response" label="Answer" placeholder="Answer?" outline />
         </div>
         <div v-if="answer">
           <v-btn v-on:click="showTitle" class="vbutton">Show</v-btn>
@@ -52,6 +52,7 @@
         position: 0,
         correct: 0,
         goal: null,
+        reponse: '',
       };
     },
     mounted() {
@@ -102,6 +103,7 @@
       },
       nextInteraction() {
         this.show_title = false;
+        this.response = '';
         if (this.done) {
           this.position += 1;
           alert(`Completed. Correct: ${this.correct} Result: ${this.percent}%`);
