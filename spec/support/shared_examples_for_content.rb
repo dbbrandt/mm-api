@@ -4,7 +4,7 @@ shared_examples "a Content class" do
 
   # Association test
   # ensure Interactions model belongs to a single goal record
-  it { should belong_to(:interaction) }
+  it { should belong_to(:interactions) }
 
   # Validation tests
   # ensure columns name and type are present before saving

@@ -25,4 +25,7 @@ test:
 
 production:
   <<: *default
+  host: precidix-postgres.c28s3zrjaak1.us-east-1.rds.amazonaws.com
   database: mm_api
+  username: precidix
+  password: precidix

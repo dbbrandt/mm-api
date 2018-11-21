@@ -1,0 +1,54 @@
+/*
+    General & Reset
+*/
+
+body {
+    background-color: #3E3E48;
+    font: 16px "Helvetica Neue", Arial, Helvetica, sans-serif;
+    color: #98a2ac;
+    -webkit-font-smoothing: antialiased;
+}
+
+a, a:link, a:visited {
+    outline: none;
+    text-decoration: none;
+}
+
+a, a:link { color: #9ECDBC; }
+a:visited { color: #98a2ac; }
+
+h1 { font-size: 2.8em; }
+h2 { font-size: 2em; }
+h3 { font-size: 1.6em; }
+p {
+    line-height: 1.3em;
+    margin: 10px 0;
+}
+ul, li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+/* Layout */
+.wrapper {
+    margin: 3em;
+}
+.centered .wrapper {
+    margin: 5em auto;
+    max-width: 500px;
+}
+
+/* Features */
+#elysium-logo {
+    font-size: 1.125em;
+    color: #FFF;
+    text-transform: uppercase;
+    border: 5px solid #8DBFE1;
+    padding: 0.3em 1.2em;
+    margin-bottom: 2em;
+    display: inline-block;
+}
+
+.accent { color: #9ECDBC; }
+main h2 { margin-bottom: 0; }

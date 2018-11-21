@@ -12,33 +12,33 @@ RSpec.describe 'interactions API', type: :request do
 
   # Test reject requests that are not permitted for this resource
   context 'requests without a goal specified should fail' do
-    describe 'GET /interactions' do
+    describe 'GET /api/interactions' do
       it 'fails to find the route' do
-        expect{ get "/interaction" }.to raise_error(ActionController::RoutingError)
+        expect{ get "/api/interaction" }.to raise_error(ActionController::RoutingError)
       end
     end
 
-    describe 'GET /interactions/:id' do
+    describe 'GET /api/interactions/:id' do
       it 'fails to find the route' do
-        expect{ get "/interactions/#{interaction_id}" }.to raise_error(ActionController::RoutingError)
+        expect{ get "/api/interactions/#{interaction_id}" }.to raise_error(ActionController::RoutingError)
       end
     end
 
-    describe 'PUT /interactions/:id' do
+    describe 'PUT /api/interactions/:id' do
       it 'fails to find the route' do
-        expect{ put "/interactions/#{interaction_id}" }.to raise_error(ActionController::RoutingError)
+        expect{ put"/api/interactions/#{interaction_id}" }.to raise_error(ActionController::RoutingError)
       end
     end
 
-    describe 'POST /interactions' do
+    describe 'POST /api/interactions' do
       it 'fails to find the route' do
-        expect{ post "/interactions" }.to raise_error(ActionController::RoutingError)
+        expect{ post "/api/interactions" }.to raise_error(ActionController::RoutingError)
       end
     end
 
-    describe 'DELETE /interactions/:id' do
+    describe 'DELETE /api/interactions/:id' do
       it 'fails to find the route' do
-        expect{ delete "/interactions/#{interaction_id}" }.to raise_error(ActionController::RoutingError)
+        expect{ delete"/api/interactions/#{interaction_id}" }.to raise_error(ActionController::RoutingError)
       end
     end
   end
@@ -46,9 +46,9 @@ RSpec.describe 'interactions API', type: :request do
   # Test requests that scoped  to the goal
   context 'requests a goal''s interactions' do
     # Test suite for GET /goal/:goal_id/interactions
-    describe 'GET /goals/:goal_id/interactions' do
+    describe 'GET /api/goals/:goal_id/interactions' do
       # make HTTP get request before each example
-      before { get "/goals/#{goal_id}/interactions" }
+      before { get "/api/goals/#{goal_id}/interactions" }
 
       it 'returns interactions' do
         # Note `json` is a custom helper to parse JSON responses
@@ -62,9 +62,9 @@ RSpec.describe 'interactions API', type: :request do
     end
 
     # Test suite for GET /goal/:goal_id/interactions/:id
-    describe 'GET /goals/:goal_id/interactions/:id' do
+    describe 'GET /api/goals/:goal_id/interactions/:id' do
       context 'when the record exists' do
-        before { get "/goals/#{goal_id}/interactions/#{interaction_id}" }
+        before { get "/api/goals/#{goal_id}/interactions/#{interaction_id}" }
 
         it 'returns the interaction' do
           expect(json).not_to be_empty
@@ -77,7 +77,7 @@ RSpec.describe 'interactions API', type: :request do
       end
 
       context 'when the record does not exist' do
-        before { get "/goals/#{goal_id}/interactions/1000" }
+        before { get "/api/goals/#{goal_id}/interactions/1000" }
 
         it 'returns status code 404' do
           expect(response).to have_http_status(404)
@@ -90,10 +90,10 @@ RSpec.describe 'interactions API', type: :request do
     end
 
     # Test suite for POST /goals/:goal_id/interactions
-    describe 'POST /goals/:goal_id/interactions' do
+    describe 'POST /api/goals/:goal_id/interactions' do
       # valid payload
       context 'when the request is valid' do
-        before { post "/goals/#{goal_id}/interactions", params: valid_attributes }
+        before { post "/api/goals/#{goal_id}/interactions", params: valid_attributes }
 
         it 'creates a interaction' do
           expect(json['title']).to eq('Tom Hanks')
@@ -105,7 +105,7 @@ RSpec.describe 'interactions API', type: :request do
       end
 
       context 'when the request is invalid' do
-        before { post "/goals/#{goal_id}/interactions", params: { title: "Meryl Streep"} }
+        before { post "/api/goals/#{goal_id}/interactions", params: { title: "Meryl Streep"} }
 
         it 'returns status code 422' do
           expect(response).to have_http_status(422)
@@ -119,10 +119,10 @@ RSpec.describe 'interactions API', type: :request do
     end
 
     # Test suite for PUT /goals/:goal_id/interactions/:id
-    describe 'PUT /goals/:goal_id/interactions/:id' do
+    describe 'PUT /api/goals/:goal_id/interactions/:id' do
 
       context 'when the record exists' do
-        before { put "/goals/#{goal_id}/interactions/#{interaction_id}", params: valid_attributes }
+        before { put "/api/goals/#{goal_id}/interactions/#{interaction_id}", params: valid_attributes }
 
         it 'updates the record' do
           expect(response.body).to be_empty
@@ -134,7 +134,7 @@ RSpec.describe 'interactions API', type: :request do
       end
 
       context 'when the record does not exists' do
-        before { put "/goals/#{goal_id}/interactions/100", params: valid_attributes }
+        before { put "/api/goals/#{goal_id}/interactions/100", params: valid_attributes }
 
         it 'returns status code 404' do
           expect(response).to have_http_status(404)
@@ -145,10 +145,10 @@ RSpec.describe 'interactions API', type: :request do
     end
 
     # Test suite for DELETE /goals/:goal_id/interactions/:id
-    describe 'DELETE /goals/:goal_id/interactions/:id' do
+    describe 'DELETE /api/goals/:goal_id/interactions/:id' do
 
       context 'when the record exists' do
-        before { delete "/goals/#{goal_id}/interactions/#{interaction_id}" }
+        before { delete "/api/goals/#{goal_id}/interactions/#{interaction_id}" }
 
           it 'returns status code 204' do
             expect(response).to have_http_status(204)
@@ -156,7 +156,7 @@ RSpec.describe 'interactions API', type: :request do
         end
 
       context 'when the record does not exists' do
-        before { delete "/goals/#{goal_id}/interactions/100" }
+        before { delete "/api/goals/#{goal_id}/interactions/100" }
 
         it 'returns status code 404' do
           expect(response).to have_http_status(404)

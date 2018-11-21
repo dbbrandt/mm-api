@@ -43,4 +43,20 @@ Rails.application.routes.draw do
   # mount Fae below your admin namespec
   mount Fae::Engine => '/admin'
 
+  namespace :api do
+    resources :bootstrap, only: [:index]
+
+    resources :goals do
+      resources :interactions
+      resources :import_files do
+        member do
+          post :generate
+        end
+      end
+    end
+
+    resources :interactions, only: [] do
+      resources :contents
+    end
+  end
 end

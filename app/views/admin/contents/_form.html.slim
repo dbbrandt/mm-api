@@ -5,14 +5,14 @@
 
   main.content
     - if @interaction
-      = f.input :interaction, as: :hidden,
+      = f.input :interactions, as: :hidden,
               input_html: {name: "content[interaction_id]", value: @interaction.id, "data-klass" => "Content"}
       label
         .control-label Interaction
       h3 = @interaction.title
         |
     - else
-      = fae_association f, :interaction
+      = fae_association f, :interactions
 
     = fae_input f, :title
     = fae_pulldown f, :content_type, collection: Content::TYPES
