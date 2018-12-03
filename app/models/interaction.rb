@@ -22,6 +22,7 @@ class Interaction < ApplicationRecord
   end
 
   def stimulus_url
+    return unless prompt
     url = prompt.stimulus&.asset&.url || ""
     url
   end

@@ -5,11 +5,10 @@
   <div v-else>
     <template v-if="interactions">
       <div class="refresh-form">
-      as of <DateTime :value='loadTime' :timeIfToday='true'/>
+        as of <DateTime :value='loadTime' :timeIfToday='true'/>
         <v-btn flat v-on:click="loadInteractions" class="refresh-btn">refresh</v-btn>
         <v-text-field :full-width=false v-model="max_interactions" label="Questions" placeholder="questions?" outline />
-        {{interactions.length}} Interaction<Pluralize :count='interactions.length'></Pluralize> (
-        Correct: {{ correct }} / {{ percent }}% )
+        Interactions Answered: {{position}} / Correct: {{ correct }} / {{ percent }}%
       </div>
       <div class="form">
         <div v-if="image_url">
@@ -29,6 +28,9 @@
               <v-btn v-on:click="correctNext" class="vbutton">Correct</v-btn>
               <v-btn v-on:click="nextInteraction" class="vbutton">Nope</v-btn>
               <v-btn v-on:click="nextInteraction" class="vbutton">Skip</v-btn>
+            </div>
+            <div class="answer">
+              {{copy}}
             </div>
           </div>
         </div>
