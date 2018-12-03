@@ -69,7 +69,7 @@
         return this.interaction.prompt.stimulus_url;
       },
       copy() {
-        return this.interaction.prompt.copy;
+        return this.interaction.criterion[0].copy;
       },
       answer() {
         return this.interaction.criterion[0].descriptor;
