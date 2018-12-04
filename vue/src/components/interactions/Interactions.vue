@@ -29,7 +29,7 @@
               <v-btn v-on:click="nextInteraction" class="vbutton">Nope</v-btn>
               <v-btn v-on:click="nextInteraction" class="vbutton">Skip</v-btn>
             </div>
-            <div class="answer">
+            <div class="copy">
               {{copy}}
             </div>
           </div>
@@ -142,6 +142,13 @@
   .answer {
     font-size: 20px;
     padding: 20px;
+  }
+
+  .copy {
+    text-align: left;
+    width: 80%;
+    padding: 20px;
+    margin: 0 50px;
   }
 
   .refresh-form {
