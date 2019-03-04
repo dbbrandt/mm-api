@@ -5,18 +5,17 @@
   <div v-else>
     <template v-if="interactions">
       <div class="refresh-form">
-      as of <DateTime :value='loadTime' :timeIfToday='true'/>
+        as of <DateTime :value='loadTime' :timeIfToday='true'/>
         <v-btn flat v-on:click="loadInteractions" class="refresh-btn">refresh</v-btn>
         <v-text-field :full-width=false v-model="max_interactions" label="Questions" placeholder="questions?" outline />
-        {{interactions.length}} Interaction<Pluralize :count='interactions.length'></Pluralize> (
-        Correct: {{ correct }} / {{ percent }}% )
+        Interactions Answered: {{position}} / Correct: {{ correct }} / {{ percent }}%
       </div>
       <div class="form">
         <div v-if="image_url">
           <img :src="image_url" class="stimulus_img">
         </div>
         <div v-else class="prompt">
-          {{copy}}
+          {{prompt_copy}}
         </div>
         <v-text-field :full-width=false v-model="response" label="Answer" placeholder="Answer?" outline />
         <div v-if="answer">
@@ -29,6 +28,9 @@
               <v-btn v-on:click="correctNext" class="vbutton">Correct</v-btn>
               <v-btn v-on:click="nextInteraction" class="vbutton">Nope</v-btn>
               <v-btn v-on:click="nextInteraction" class="vbutton">Skip</v-btn>
+            </div>
+            <div class="copy">
+              {{copy}}
             </div>
           </div>
         </div>
@@ -60,23 +62,29 @@
       this.loadInteractions(this.goal);
     },
     computed: {
+      total() {
+        return this.interactions.count;
+      },
       interaction() {
         return this.interactions[this.position];
       },
       image_url() {
         return this.interaction.prompt.stimulus_url;
       },
-      copy() {
+      prompt_copy() {
         return this.interaction.prompt.copy;
       },
       answer() {
         return this.interaction.criterion[0].descriptor;
       },
+      copy() {
+        return this.interaction.criterion[0].copy;
+      },
       percent() {
         return (this.position > 0) ? 100 * (this.correct / this.position) : 0;
       },
       done() {
-        return this.position >= this.max_interactions - 1;
+        return this.position >= this.total;
       },
     },
     methods: {
@@ -140,6 +148,13 @@
   .answer {
     font-size: 20px;
     padding: 20px;
+  }
+
+  .copy {
+    text-align: left;
+    width: 80%;
+    padding: 20px;
+    margin: 0 50px;
   }
 
   .refresh-form {
