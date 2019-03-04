@@ -17,8 +17,8 @@
         </div>
         <div v-else class="prompt">
           {{copy}}
-          <v-text-field :full-width=false v-model="response" label="Answer" placeholder="Answer?" outline />
         </div>
+        <v-text-field :full-width=false v-model="response" label="Answer" placeholder="Answer?" outline />
         <div v-if="answer">
           <v-btn v-on:click="showTitle" class="vbutton">Show</v-btn>
           <div v-if="show_title">

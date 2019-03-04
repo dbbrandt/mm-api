@@ -6,7 +6,7 @@ module Api
     def index
       if (params["deep"])
         size = params["size"] ? (params["size"].to_i - 1)  : 49
-        json_response(@goal.interactions.includes(:contents).map {|i| deep_response(i)}.shuffle[0..size])
+        json_response(@goal.interactions.short_answer.includes(:contents).map {|i| deep_response(i)}.shuffle[0..size])
       else
       json_response(@goal.interactions)
     end

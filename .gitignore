@@ -19,3 +19,9 @@
 
 # Ignore Byebug command history file.
 .byebug_history
+
+# Ruby Mine
+/.idea/*
+
+# NPM binary files
+/node_modules/*
