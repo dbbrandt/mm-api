@@ -22,5 +22,6 @@
 
 # NPM binary files
 /node_modules/*
-=======
+
+# Ruby Mine Configs
 /.idea/*
