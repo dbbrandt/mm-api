@@ -15,9 +15,9 @@
           <img :src="image_url" class="stimulus_img">
         </div>
         <div v-else class="prompt">
-          {{copy}}
-          <v-text-field :full-width=false v-model="response" label="Answer" placeholder="Answer?" outline />
+          {{prompt_copy}}
         </div>
+        <v-text-field :full-width=false v-model="response" label="Answer" placeholder="Answer?" outline />
         <div v-if="answer">
           <v-btn v-on:click="showTitle" class="vbutton">Show</v-btn>
           <div v-if="show_title">
@@ -62,23 +62,29 @@
       this.loadInteractions(this.goal);
     },
     computed: {
+      total() {
+        return this.interactions.count;
+      },
       interaction() {
         return this.interactions[this.position];
       },
       image_url() {
         return this.interaction.prompt.stimulus_url;
       },
-      copy() {
-        return this.interaction.criterion[0].copy;
+      prompt_copy() {
+        return this.interaction.prompt.copy;
       },
       answer() {
         return this.interaction.criterion[0].descriptor;
+      },
+      copy() {
+        return this.interaction.criterion[0].copy;
       },
       percent() {
         return (this.position > 0) ? 100 * (this.correct / this.position) : 0;
       },
       done() {
-        return this.position >= this.max_interactions - 1;
+        return this.position >= this.total;
       },
     },
     methods: {
