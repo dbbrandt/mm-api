@@ -6,9 +6,10 @@ module Api
     def index
       if (params["deep"])
         size = params["size"] ? (params["size"].to_i - 1)  : 49
-        json_response(@goal.interactions.short_answer.includes(:contents).map {|i| deep_response(i)}.shuffle[0..size])
+        type = params["type"] == 'mc' ? :multiple_choice : :short_answer
+        json_response(@goal.interactions.send(type).includes(:contents).map {|i| deep_response(i)}.shuffle[0..size])
       else
-      json_response(@goal.interactions)
+        json_response(@goal.interactions)
     end
     end
 
@@ -57,8 +58,8 @@ module Api
         "title": i.title,
         "answer_type": i.answer_type,
         "prompt": {
-          "title": p.title,
-          "copy": p.copy,
+          "title": p&.title,
+          "copy": p&.copy,
           "stimulus_url": i.stimulus_url
         },
         "criterion": criterion_response(interaction)

@@ -6,7 +6,8 @@ RSpec.describe 'interactions API', type: :request do
   let!(:goal) { create(:goal) }
   let!(:goal_id) { goal.id }
   let!(:interactions) { create_list(:interaction, 10, goal: goal) }
-  let(:interaction_id) { interactions.first.id }
+  let!(:interaction) { interactions.first }
+  let(:interaction_id) { interaction.id }
   let(:valid_attributes) { { title: 'Tom Hanks', answer_type: 'ShortAnswer' } }
 
 
@@ -58,6 +59,35 @@ RSpec.describe 'interactions API', type: :request do
 
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
+      end
+    end
+
+    describe 'GET /api/goals/:goal_id/interactions with params' do
+      # make HTTP get request before each example
+      before do
+        create(:content, interaction: interaction)
+        get "/api/goals/#{goal_id}/interactions?deep=true"
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns deep interactions' do
+        # Note `json` is a custom helper to parse JSON responses
+        expect(json).not_to be_empty
+        expect(json[0]["prompt"]).not_to be_nil
+      end
+
+      it 'returns multiple choice interactions' do
+        expect(json.size).to eq(10)
+      end
+
+      it 'return short answer interactions' do
+        interaction.update_attributes(answer_type: "MultipleChoice")
+        get "/api/goals/#{goal_id}/interactions?deep=true&type=mc"
+        expect(json).not_to be_empty
+        expect(json.size).to eq(1)
       end
     end
 
