@@ -10,6 +10,9 @@ class Interaction < ApplicationRecord
   #acts_as_list add_new_at: :top
   default_scope { order('updated_at DESC') }
 
+  scope :short_answer, -> { where(answer_type: 'ShortAnswer')}
+  scope :multiple_choice, -> { where(answer_type: 'MultipleChoice')}
+
   validates_presence_of :title
   validates_inclusion_of :answer_type, in: TYPES
 
