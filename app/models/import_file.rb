@@ -129,8 +129,9 @@ class ImportFile < ApplicationRecord
 
   def json_criterion(row, number)
     unless row.json["criterion#{number}"].blank?
-      # Default copy to criterion if blank
-      {title: row.json["title"], content_type: 'Criterion', copy: row.json["copy#{number}"] || row.json["criterion#{number}"],
+      # Default copy to criterion if blank.
+      copy = row.json["copy#{number}"].blank? ? row.json["criterion#{number}"] : row.json["copy#{number}"]
+      {title: row.json["title"], content_type: 'Criterion', copy: copy ,
               descriptor: row.json["criterion#{number}"], score: row.json["points#{number}"]}
     end
   end

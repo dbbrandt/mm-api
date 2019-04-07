@@ -14,7 +14,7 @@ Instance Variable Syntax,ShortAnswer,Write the variable x as instance in scope:,
 Local Variable Syntax,ShortAnswer,Write the variable x as local or blockl in scope:,x,,1,,,,,,,,,
 Constructor Method,ShortAnswer,What method acts as the constructor for a class?,initialize,,1,,,,,,,,,
 Create an uninitizlized object,ShortAnswer,Which method instantiates and object without calling initialize?,allocate,,1,,,,,,,,,
-Ranges,MultipleChoice,Which of the following is not a valid use of a range.,Sequences,,0,Comparables,,0,Intervals,,0,Enumerables,Ruby supports ranges and allows us to use ranges in a variety of ways,1
+Ranges,MultipleChoice,Which of the following is not a valid use of a range.,Sequences,,0,Comparables, ,0,Intervals, ,0,Enumerables,Ruby supports ranges and allows us to use ranges in a variety of ways,1
 Range syntax,ShortAnswer,Type in a range from 1 to 9:,(1..9),,1,,,,,,,,,
 Range Sytanx exclude,ShortAnswer,What does the '…' range syntax do.,Exclude the high value,,1,,,,,,,,,
 Range types,ShortAnswer,Which operator must be supported for a valid range type?,comparison,,1,<==>,,1,,,,,,
