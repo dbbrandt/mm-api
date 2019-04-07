@@ -1,4 +1,4 @@
-class Content < ApplicationRecord
+  class Content < ApplicationRecord
   include Fae::BaseModelConcern
 
   PROMPT = 'Prompt'

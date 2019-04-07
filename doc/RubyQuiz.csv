@@ -1,4 +1,4 @@
-title,answer_type,prompt,criterion1,copy1,points1,criterion2,copy2,points2,criterion3,copy3,points3,criterion4,copy4,points4
+    title,answer_type,prompt,criterion1,copy1,points1,criterion2,copy2,points2,criterion3,copy3,points3,criterion4,copy4,points4
 Ruby Developer,ShortAnswer,What was Ruby's original developers name?,Yukihiro Matsumoto,Yukihiro Matsumoto in the mid 1990’s,1,,,,,,,,,
 Ruby Developer's Nick Name,ShortAnswer,What was Ruby's original developers nick name?,Matz,,1,,,,,,,,,
 Ruby language principle,MultipleChoice,Which is not a Ruby Language Principles?,Takes the true OO approach of Smalltalk,,0,Everything is an object,,0,Follow the principle of POLA,,0,Favor explicit and readabilie over implicit and elegant.,,1

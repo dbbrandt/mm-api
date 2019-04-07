@@ -12,7 +12,10 @@ class ImportRowValidator < ActiveModel::Validator
       return
     end
 
-    if ImportRow.where(import_file_id: record.import_file_id, title: record.title).count > 0
+
+    duplicate = ImportRow.where(import_file_id: record.import_file_id, title: record.title).first
+    # if update, ignore the record getting updated
+    if duplicate and duplicate.id != record.id
       record.errors.add(:title, "must be unique. Duplicate value: #{record.title}")
       return
     end

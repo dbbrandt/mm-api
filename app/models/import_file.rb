@@ -95,15 +95,13 @@ class ImportFile < ApplicationRecord
               if json_criterion(row, number)
                 criterion = generate_criterion(interaction, row, number)
                 unless criterion
-                  errors << {content: "Criterion #{number} row not created for row_id: #{row.id}"}
+                  insert_errors << {content: "Criterion #{number} row not created for row_id: #{row.id}"}
                 end
               end
             end
           else
             insert_errors << {content: "Prompt row not created for row_id: #{row.id}"}
           end
-        else
-          insert_errors << {interactions: "Row not created for row_id: #{row.id}"}
         end
       end
       raise ActiveRecord::Rollback unless insert_errors
@@ -114,6 +112,7 @@ class ImportFile < ApplicationRecord
   def generate_interaction(row)
     interaction = Interaction.where(goal_id: goal_id, import_row_id: row.id).first
     if interaction
+      interaction.update(title: row.title, answer_type: row.json["answer_type"])
       interaction.contents.delete_all
     else
       interaction = goal.interactions.create!(title: row.title, answer_type: row.json["answer_type"], import_row_id: row.id)
