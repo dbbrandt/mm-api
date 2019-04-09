@@ -26,6 +26,9 @@ Rails.application.routes.draw do
     resources :bootstrap, only: [:index]
 
     resources :goals do
+      member do
+        delete :purge
+      end
       resources :interactions
       resources :import_files do
         member do

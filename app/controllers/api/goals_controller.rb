@@ -1,6 +1,6 @@
 module Api
   class GoalsController < ApplicationController
-    before_action :set_goal, only: [:show, :update, :destroy]
+    before_action :set_goal, only: [:show, :update, :destroy, :purge]
 
     # GET /goals
     def index
@@ -30,6 +30,13 @@ module Api
       @goal.destroy
       head :no_content
     end
+
+    # Delete /goals/:id/purge
+    def purge
+      @goal.interactions.destroy_all
+      head :no_content
+    end
+
 
     private
 
