@@ -55,4 +55,3 @@ set :nginx_domains, "www.memorymaestro.com"
 
 # default value: "service nginx”
 set :nginx_service_path, "/etc/init.d/nginx"
-

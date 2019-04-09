@@ -70,6 +70,8 @@ group :development do
   gem 'capistrano3-puma'
   gem 'capistrano3-nginx'
   gem 'capistrano-upload-config'
+  gem 'capistrano-rails-console', require: false
+
 end
 
 group :test do
