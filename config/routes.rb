@@ -1,25 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :goals do
-    resources :interactions
-    resources :import_files do
-      member do
-        post :generate
-      end
-  end
-
-  end
-
-  # Allows only nested requests to contents.
-  resources :interactions, only: [] do
-    resources :contents
-  end
-
-  # Allows only nested requests to import_rows
-  resources :import_files, only: [] do
-    resources :import_rows
-  end
-
   namespace :admin do
     resources :import_files do
       resources :import_rows
@@ -35,7 +15,6 @@ Rails.application.routes.draw do
      resources :contents
     end
 
-    # Allow only routs to
     resources :contents
     resources :import_rows
   end
@@ -55,8 +34,13 @@ Rails.application.routes.draw do
       end
     end
 
+    # Interactions are only accessible through goals and content through interactions.
     resources :interactions, only: [] do
       resources :contents
+    end
+
+    resources :import_files do
+      resources :import_rows
     end
   end
 end
