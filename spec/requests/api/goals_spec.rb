@@ -123,4 +123,24 @@ RSpec.describe 'Goals API', type: :request do
       end
     end
   end
+
+  # Test suite for DELETE /goals/:id/purge
+  describe 'DELETE /api/goals/:id/purge' do
+
+    context 'when the record exists' do
+      before do
+        create_list(:interaction, 10, goal: goals.first)
+        delete "/api/goals/#{goal_id}/purge"
+      end
+      it 'returns status code 204' do
+        expect(response).to have_http_status(204)
+      end
+
+      it 'does not have any interactions' do
+        get "/api/goals/#{goal_id}/interactions"
+        expect(json).to be_empty
+      end
+
+    end
+  end
 end
