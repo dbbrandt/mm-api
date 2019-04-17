@@ -29,7 +29,11 @@ Rails.application.routes.draw do
       member do
         delete :purge
       end
-      resources :interactions
+      resources :interactions do
+        member do
+          get :check_answer
+        end
+      end
       resources :import_files do
         member do
           post :generate

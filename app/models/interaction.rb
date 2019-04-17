@@ -1,7 +1,10 @@
 class Interaction < ApplicationRecord
   include Fae::BaseModelConcern
+  include Amatch
 
   TYPES = ['ShortAnswer','MultipleChoice']
+  CORRECT_THRESHOLD = 0.85
+  #@@jarrow = FuzzyStringMatch::JaroWinkler.create( :native )
 
   def fae_display_field
     title
@@ -36,5 +39,20 @@ class Interaction < ApplicationRecord
 
   def criterion
     contents.where(content_type: Content::CRITERION)
+  end
+
+  def correct_answer
+    return @correct_answer if @correct_answer
+    answer = criterion.where(score: 1).first
+    @correct_answer ||= answer.descriptor if answer
+  end
+
+  def check_answer(answer)
+    m = Levenshtein.new(correct_answer.downcase)
+    match = m.match(answer.downcase)
+    length = (correct_answer+answer).length
+    score = (length - match).to_f/length
+    check = score >= CORRECT_THRESHOLD
+    return check, score
   end
 end

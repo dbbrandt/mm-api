@@ -37,7 +37,9 @@ gem 'turbolinks', '~> 5'
 # Draper adds an object-oriented layer of presentation logic to your Rails application.
 gem 'draper', '~> 3.0.0'
 
-
+# Add support for fuzzy string comparision and scoring
+# gem 'fuzzy-string-match', '~>1.0'
+gem 'amatch', '~> 0.4'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

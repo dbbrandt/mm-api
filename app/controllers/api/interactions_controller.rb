@@ -10,7 +10,7 @@ module Api
         json_response(@goal.interactions.send(type).includes(:contents).map {|i| deep_response(i)}.shuffle[0..size])
       else
         json_response(@goal.interactions)
-    end
+      end
     end
 
     # GET /goals/:goal_id/interactions/:id
@@ -36,7 +36,15 @@ module Api
       head :no_content
     end
 
-    #
+    # GET /goals/:goals_id/interactions/:id?answer=
+    def check_answer
+      correct, score = @interaction.check_answer(params['answer'])
+      json_response({
+         "correct": correct,
+         "score": score
+      })
+    end
+
     private
 
     def interaction_params

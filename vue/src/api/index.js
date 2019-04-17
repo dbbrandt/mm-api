@@ -27,6 +27,9 @@ export default {
     show(id) {
       return api.interactions.show(id);
     },
+    check(goal, id, answer) {
+      return api.interactions.check(goal, id, answer);
+    },
   },
   skuImage: {
     find(id, idType) {
