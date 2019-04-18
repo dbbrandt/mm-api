@@ -11,4 +11,24 @@ RSpec.describe Interaction, type: :model do
   it { is_expected.to validate_presence_of(:title) }
   it { is_expected.to validate_inclusion_of(:answer_type).in_array(Interaction::TYPES) }
 
+  describe 'check answer' do
+    let(:interaction) do
+      goal = create(:goal)
+      interaction = create(:interaction, goal: goal)
+      create(:content, :criterion, interaction: interaction)
+      interaction
+    end
+
+    it 'finds an interaction' do
+      correct, score = interaction.check_answer('wrong')
+      expect(correct).to be_falsey
+      expect(score).not_to eq(1)
+    end
+
+    it 'does not find an interaction' do
+      correct, score = interaction.check_answer(interaction.correct_answer)
+      expect(correct).to be_truthy
+      expect(score).to eq(1)
+    end
+  end
 end

@@ -119,6 +119,20 @@ RSpec.describe 'interactions API', type: :request do
       end
     end
 
+    # Test suite for GET /goal/:goal_id/interactions/:id/check_answer
+    describe 'GET /api/goals/:goal_id/interactions/:id/check_answer' do
+        before do
+          create(:content, :criterion, interaction: interaction)
+          get "/api/goals/#{goal_id}/interactions/#{interaction_id}/check_answer?answer=wrong"
+        end
+
+      it 'returns the check results' do
+        expect(json).not_to be_empty
+        expect(json['correct']).to eq(false)
+        expect(json['score']).not_to eq(1)
+      end
+    end
+
     # Test suite for POST /goals/:goal_id/interactions
     describe 'POST /api/goals/:goal_id/interactions' do
       # valid payload

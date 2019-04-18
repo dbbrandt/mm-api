@@ -92,7 +92,11 @@ export default {
         .then(response => response.data)
         .catch(handleError);
     },
-
+    check(goal, id, answer) {
+      return axios.get(`${endpoint(GOALS)}/${goal}${INTERACTIONS}/${id}/check_answer`, { params: { answer: `${answer}` } })
+        .then(response => response.data)
+        .catch(handleError);
+    },
   },
   sku: {
     find(ids, idType) {
