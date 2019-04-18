@@ -7,4 +7,10 @@ FactoryGirl.define do
     copy { Faker::Lorem.word }
     interaction { }
   end
+
+  trait :criterion do
+    content_type { "Criterion" }
+    score 1
+    descriptor { Faker::Lorem.word }
+  end
 end
