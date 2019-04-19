@@ -7,7 +7,7 @@
       <div class="refresh-form">
         as of <DateTime :value='loadTime' :timeIfToday='true'/>
         <v-btn flat v-on:click="loadInteractions" class="refresh-btn">refresh</v-btn>
-        <v-text-field :full-width=false v-model="max_interactions" label="Questions" placeholder="questions?" outline />
+        <v-text-field :full-width=false v-model="max_interactions" label="Questions" placeholder="questions?" outline/>
         Interactions Answered: {{position}} / Correct: {{ correct_answers }} / {{ percent }}%
       </div>
       <div class="form">
@@ -18,7 +18,7 @@
           {{prompt_copy}}
         </div>
         <div class="response">
-          <v-text-field :full-width=false v-model="answer" label="Answer" placeholder="Answer?" outline/>
+          <v-text-field class="response-text" :full-width=false v-model="answer" label="Answer" placeholder="Answer?" outline/>
         </div>
         <div v-if="correct_answer">
           <div class="show-button">
@@ -171,14 +171,15 @@
     padding-top: 40px;
     width: 300px;
   }
+
   .prompt {
     font-size: 30px;
     padding: 40px;
   }
 
-  .answer {
-    font-size: 20px;
-    padding: 20px;
+  .response_text {
+    margin_top: 100px;
+    font-size: 30px;
   }
 
   .response {

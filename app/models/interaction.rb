@@ -53,6 +53,6 @@ class Interaction < ApplicationRecord
     length = (correct_answer+answer).length
     score = (length - match).to_f/length
     check = score >= CORRECT_THRESHOLD
-    return check, score
+    return check, score.round(3)
   end
 end
