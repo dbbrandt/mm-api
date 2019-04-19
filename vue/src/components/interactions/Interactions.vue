@@ -18,10 +18,13 @@
           </div>
         </div>
         <div class="questions">
-          Interactions Answered: {{position}}
+          Interactions Answered: {{score_count}}
         </div>
         <div>
           Correct: {{ correct_answers }} / {{ percent }}%
+        </div>
+        <div>
+          Score: {{ total_score }}%
         </div>
       </div>
       <div class="form">
@@ -70,6 +73,8 @@
         show_title: false,
         loadTime: null,
         correct_answers: 0,
+        aggregate_score: 0,
+        score_count: 0,
         position: 0,
         goal: null,
         answer: '',
@@ -104,13 +109,17 @@
         return this.interaction.criterion[0].copy;
       },
       percent() {
-        return (this.position > 0) ? 100 * (this.correct_answers / this.position) : 0;
+        return (this.position > 0) ? Math.round(100 * (this.correct_answers / this.score_count)) : 0;
       },
       done() {
-        return this.position >= this.total - 1;
+        return this.position >= this.total;
       },
       score() {
         return this.result ? this.result.score : 0;
+      },
+      total_score() {
+        const totalScore = Math.round(100 * (this.aggregate_score / this.score_count));
+        return this.score_count > 0 ? totalScore : 0;
       },
       correct_text() {
         if (this.result) {
@@ -125,6 +134,8 @@
       resetPosition() {
         this.position = 0;
         this.correct_answers = 0;
+        this.aggregate_score = 0;
+        this.score_count = 0;
         this.show_title = false;
       },
       loadInteractions() {
@@ -147,12 +158,10 @@
         this.show_title = false;
         this.answer = '';
         this.response = '';
+        this.position += 1;
         if (this.done) {
-          this.position += 1;
-          alert(`Completed. Correct: ${this.correct_answers} Result: ${this.percent}%`);
+          alert(`Completed. Correct: ${this.correct_answers} Result: ${this.percent}% Score = ${this.total_score}`);
           this.resetPosition();
-        } else {
-          this.position += 1;
         }
       },
       checkInteraction() {
@@ -160,6 +169,8 @@
         api.interactions.check(this.goal, this.interaction_id, this.answer)
           .then((response) => {
             this.result = response;
+            this.aggregate_score += this.score;
+            this.score_count += 1;
           }).finally(() => {
             this.isLoading = false;
           });
