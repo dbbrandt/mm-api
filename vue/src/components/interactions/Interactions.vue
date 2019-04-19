@@ -5,10 +5,24 @@
   <div v-else>
     <template v-if="interactions">
       <div class="refresh-form">
-        as of <DateTime :value='loadTime' :timeIfToday='true'/>
-        <v-btn flat v-on:click="loadInteractions" class="refresh-btn">refresh</v-btn>
-        <v-text-field :full-width=false v-model="max_interactions" label="Questions" placeholder="questions?" outline />
-        Interactions Answered: {{position}} / Correct: {{ correct_answers }} / {{ percent }}%
+        <div>as of <DateTime :value='loadTime' :timeIfToday='true'/></div>
+        <div class="refresh">
+          <v-btn flat v-on:click="loadInteractions" class="refresh-btn">refresh</v-btn>
+        </div>
+        <div>
+          <div  class="questions">
+            Questions:
+          </div>
+          <div class="question_input">
+            <input align="left" type="Text" placeholder="Questions" v-model="max_interactions" class="questions_text"/>
+          </div>
+        </div>
+        <div class="questions">
+          Interactions Answered: {{position}}
+        </div>
+        <div>
+          Correct: {{ correct_answers }} / {{ percent }}%
+        </div>
       </div>
       <div class="form">
         <div v-if="image_url">
@@ -18,7 +32,7 @@
           {{prompt_copy}}
         </div>
         <div class="response">
-          <v-text-field :full-width=false v-model="answer" label="Answer" placeholder="Answer?" outline/>
+          <input align="left" type="Text" placeholder="answer..." v-model="answer" class="response_text"/>
         </div>
         <div v-if="correct_answer">
           <div class="show-button">
@@ -171,17 +185,35 @@
     padding-top: 40px;
     width: 300px;
   }
+
   .prompt {
     font-size: 30px;
     padding: 40px;
   }
 
-  .answer {
+  .questions {
+    float: left;
+  }
+
+  .question_input input {
+    width: 30px;
+    border: 1px solid #b1b1b1;
+    padding-left: 5px;
+  }
+
+  .question_text {
     font-size: 20px;
-    padding: 20px;
+  }
+
+  .response_text {
+    font-size: 20px;
+    padding-left: 5px;
+    border: 1px solid #b1b1b1;
   }
 
   .response {
+    padding-top: 20px;
+    padding-bottom: 20px;
     margin: auto;
     width: 33%;
   }
@@ -194,6 +226,15 @@
   }
 
   .show-button  {
+    width: 100%;
+  }
+
+  .refresh {
+    height: 35px;
+  }
+
+  .refresh-btn {
+    text-align: left;
     width: 100%;
   }
 
