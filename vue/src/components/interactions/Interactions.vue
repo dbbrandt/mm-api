@@ -281,10 +281,23 @@
       font-size: 30px;
     }
 
+    .refresh {
+      height: 35px;
+      padding-bottom: 60px;
+    }
+
     .refresh-form {
       padding-top: 40px;
       float: left;
       text-align: left;
+    }
+
+    .question_text {
+      font-size: 40px;
+    }
+
+    .response_text {
+      font-size: 40px;
     }
 
     .input-group .input-group__input {
