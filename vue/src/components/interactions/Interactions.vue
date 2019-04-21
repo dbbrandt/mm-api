@@ -35,7 +35,7 @@
           {{prompt_copy}}
         </div>
         <div class="response">
-          <input align="left" type="Text" placeholder="answer..." v-model="answer" class="response_text"/>
+          <input align="left" type="Text" placeholder="answer..." v-model="answer" class="response_text" v-on:keyup.enter="showTitle"/>
         </div>
         <div v-if="correct_answer">
           <div class="show-button">
