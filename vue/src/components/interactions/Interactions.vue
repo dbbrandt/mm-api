@@ -35,7 +35,7 @@
           {{prompt_copy}}
         </div>
         <div class="response">
-          <input align="left" type="Text" placeholder="answer..." v-model="answer" class="response_text" v-on:keyup.enter="showTitle"/>
+          <input align="left" type="Text" placeholder="answer..." v-model="answer" class="response_text" v-on:keyup.enter="showTitle" ref="answer" v-focus/>
         </div>
         <div v-if="correct_answer">
           <div class="show-button">
@@ -159,6 +159,7 @@
         this.answer = '';
         this.response = '';
         this.position += 1;
+        this.$refs.answer.focus();
         if (this.done) {
           alert(`Completed. Correct: ${this.correct_answers} Result: ${this.percent}% Score = ${this.total_score}`);
           this.resetPosition();
