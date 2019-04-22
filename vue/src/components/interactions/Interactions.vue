@@ -35,7 +35,7 @@
           {{prompt_copy}}
         </div>
         <div class="response">
-          <input align="left" type="Text" placeholder="answer..." v-model="answer" class="response_text" v-on:keyup.enter="showTitle" ref="answer" v-focus/>
+          <input align="left" type="Text" placeholder="answer..." v-model="answer" class="response_text" v-on:keydown.enter="showTitle" ref="answer" v-focus/>
         </div>
         <div v-if="correct_answer">
           <div class="show-button">
@@ -177,8 +177,10 @@
           });
       },
       showTitle() {
-        this.checkInteraction();
-        this.show_title = true;
+        if (!this.show_title) {
+          this.checkInteraction();
+          this.show_title = true;
+        }
       },
     },
   };
