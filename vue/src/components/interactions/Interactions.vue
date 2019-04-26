@@ -42,16 +42,21 @@
             <v-btn v-on:click="showTitle" class="vbutton">Show</v-btn>
           </div>
           <div v-if="show_title">
-            <div class="answer">
-              {{correct_answer}} - {{correct_text}} ({{ score }})
+            <div v-if="isLoadingAnswer">
+              <Spinner msg='Checking Answer'/>
             </div>
-            <div>
-              <v-btn v-on:click="correctNext" class="vbutton">Correct</v-btn>
-              <v-btn v-on:click="nextInteraction" class="vbutton">Nope</v-btn>
-              <v-btn v-on:click="nextInteraction" class="vbutton">Skip</v-btn>
-            </div>
-            <div class="copy">
-              {{copy}}
+            <div v-else>
+              <div class="answer">
+                {{correct_answer}} - {{correct_text}} ({{ score }})
+              </div>
+              <div>
+                <v-btn v-on:click="correctNext" class="vbutton" ref="correct">Correct</v-btn>
+                <v-btn v-on:click="nextInteraction" class="vbutton" ref="incorrect">Nope</v-btn>
+                <v-btn v-on:click="nextInteraction" class="vbutton">Skip</v-btn>
+              </div>
+              <div class="copy">
+                {{copy}}
+              </div>
             </div>
           </div>
         </div>
@@ -71,7 +76,9 @@
         interactions: null,
         isLoading: false,
         show_title: false,
+        isLoadingAnswer: false,
         loadTime: null,
+        correctThreshold: 0.85,
         correct_answers: 0,
         aggregate_score: 0,
         score_count: 0,
@@ -166,14 +173,21 @@
         }
       },
       checkInteraction() {
-        this.isLoading = true;
+        // this.isLoadingAnswer = true;
         api.interactions.check(this.goal, this.interaction_id, this.answer)
           .then((response) => {
             this.result = response;
             this.aggregate_score += this.score;
             this.score_count += 1;
           }).finally(() => {
-            this.isLoading = false;
+            this.isLoadingAnswer = false;
+            this.$nextTick(() => {
+              if (this.score >= this.correctThreshold) {
+                this.$refs.correct.$el.focus();
+              } else {
+                this.$refs.incorrect.$el.focus();
+              }
+            });
           });
       },
       showTitle() {
