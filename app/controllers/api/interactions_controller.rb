@@ -4,7 +4,7 @@ module Api
 
     # GET /goals/:goal_id/interactions
     def index
-      if (params["deep"])
+      if params["deep"]
         size = params["size"] ? (params["size"].to_i - 1)  : 49
         type = params["type"] == 'mc' ? :multiple_choice : :short_answer
         json_response(@goal.interactions.send(type).includes(:contents).map {|i| deep_response(i)}.shuffle[0..size])
@@ -45,6 +45,14 @@ module Api
       })
     end
 
+    def submit_review
+      response = save_response(params['answer'], params['score'], params['correct'], params['review'])
+      json_response({
+          "round": @round.id,
+          "response": response.id
+      })
+    end
+
     private
 
     def interaction_params
@@ -56,6 +64,21 @@ module Api
       return unless params[:goal_id]
       @goal = Goal.preload(:interactions).find(params[:goal_id])
       @interaction = Interaction.preload(:contents).find(params[:id]) if params[:id]
+      set_round if params['round']
+    end
+
+    def set_round
+      user = Fae::User.first
+      if params['round']
+        round_id = params['round'].to_i
+        @round = Round.where(id: round_id).first
+        @round = Round.create(goal: @goal, fae_user_id: user.id) unless @round
+      end
+    end
+
+    def save_response(answer, score, is_correct, review_is_correct)
+      RoundResponse.create(round: @round, interaction: @interaction, answer: answer, score: score,
+                                      is_correct: is_correct, review_is_correct: review_is_correct)
     end
 
     def deep_response(interaction)

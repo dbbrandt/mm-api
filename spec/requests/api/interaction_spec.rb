@@ -133,6 +133,28 @@ RSpec.describe 'interactions API', type: :request do
       end
     end
 
+    # Test suite for POST /goal/:goal_id/interactions/:id/submit_review
+    describe 'POST /api/goals/:goal_id/interactions/:id/submit_review' do
+      before do
+        Fae::User.create(first_name: 'Test', last_name: 'user', password: 'testtest',
+                         email: 'test@test.com', role_id: 10)
+        create(:content, :criterion, interaction: interaction)
+        post "/api/goals/#{goal_id}/interactions/#{interaction_id}/submit_review",
+            params: { goal_id: goal_id, id: interaction_id, round: 0, answer: 'Test', score: 90, correct: true, review: true }
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns the submit review results' do
+        expect(json).not_to be_empty
+        expect(json['round']).not_to be_nil
+        expect(json['response']).not_to be_nil
+      end
+    end
+
+
     # Test suite for POST /goals/:goal_id/interactions
     describe 'POST /api/goals/:goal_id/interactions' do
       # valid payload

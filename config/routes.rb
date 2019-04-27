@@ -32,6 +32,7 @@ Rails.application.routes.draw do
       resources :interactions do
         member do
           get :check_answer
+          post :submit_review
         end
       end
       resources :import_files do

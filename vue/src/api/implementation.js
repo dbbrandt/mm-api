@@ -97,6 +97,18 @@ export default {
         .then(response => response.data)
         .catch(handleError);
     },
+    review(goal, id, roundId, answerVal, scoreVal, correctVal, reviewCorrectVal) {
+      const params = {
+        round: roundId,
+        answer: answerVal,
+        score: scoreVal,
+        correct: correctVal,
+        review: reviewCorrectVal,
+      };
+      return axios.post(`${endpoint(GOALS)}/${goal}${INTERACTIONS}/${id}/submit_review`, params)
+        .then(response => response.data)
+        .catch(handleError);
+    },
   },
   sku: {
     find(ids, idType) {
