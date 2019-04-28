@@ -30,6 +30,10 @@ export default {
     check(goal, id, answer) {
       return api.interactions.check(goal, id, answer);
     },
+    review(goal, id, round, answer, score, correct, reviewCorrect) {
+      return api.interactions.review(goal, id, round, answer, score, correct, reviewCorrect);
+    },
+
   },
   skuImage: {
     find(id, idType) {

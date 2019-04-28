@@ -46,20 +46,20 @@
               <Spinner msg='Checking Answer'/>
             </div>
             <div v-else>
-              <div class="answer">
-                {{correct_answer}} - {{correct_text}} ({{ score }})
-              </div>
-              <div>
+            <div class="answer">
+              {{correct_answer}} - {{correct_text}} ({{ score }})
+            </div>
+            <div>
                 <v-btn v-on:click="correctNext" class="vbutton" ref="correct">Correct</v-btn>
                 <v-btn v-on:click="nextInteraction" class="vbutton" ref="incorrect">Nope</v-btn>
-                <v-btn v-on:click="nextInteraction" class="vbutton">Skip</v-btn>
-              </div>
-              <div class="copy">
-                {{copy}}
-              </div>
+              <v-btn v-on:click="nextInteraction" class="vbutton">Skip</v-btn>
+            </div>
+            <div class="copy">
+              {{copy}}
             </div>
           </div>
         </div>
+      </div>
       </div>
     </template>
   </div>
@@ -85,8 +85,10 @@
         position: 0,
         goal: null,
         answer: '',
-        correct: '',
+        round: 0,
+        review_correct: false,
         result: null,
+        review: null,
       };
     },
     mounted() {
@@ -124,17 +126,15 @@
       score() {
         return this.result ? Math.round(this.result.score * 100) : 0;
       },
+      correct() {
+        return this.result ? this.result.correct : false;
+      },
       total_score() {
         const totalScore = Math.round(this.aggregate_score / this.score_count);
         return this.score_count > 0 ? totalScore : 0;
       },
       correct_text() {
-        if (this.result) {
-          this.correct = this.result.correct ? 'Correct!' : 'Incorrect.';
-        } else {
-          this.correct = 'Unavailable..';
-        }
-        return this.correct;
+        return this.result && this.result.correct ? 'Correct!' : 'Incorrect.';
       },
     },
     methods: {
@@ -159,14 +159,17 @@
       },
       correctNext() {
         this.correct_answers += 1;
+        this.review_correct = true;
         this.nextInteraction();
       },
       nextInteraction() {
+        this.submit_review();
         this.show_title = false;
+        this.review_correct = false;
         this.answer = '';
         this.response = '';
         this.position += 1;
-        this.$refs.answer.focus();
+        // this.$refs.answer.focus();
         if (this.done) {
           alert(`Completed. Correct: ${this.correct_answers} Result: ${this.percent}% Score = ${this.total_score}`);
           this.resetPosition();
@@ -188,6 +191,14 @@
                 this.$refs.incorrect.$el.focus();
               }
             });
+          });
+      },
+      submit_review() {
+        api.interactions.review(this.goal, this.interaction_id, this.round, this.answer, this.score,
+                                this.correct, this.review_correct)
+          .then((response) => {
+            this.review = response;
+            this.round = this.review.round;
           });
       },
       showTitle() {
