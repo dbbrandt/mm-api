@@ -52,7 +52,7 @@
             <div>
                 <v-btn v-on:click="correctNext" class="vbutton" ref="correct">Correct</v-btn>
                 <v-btn v-on:click="nextInteraction" class="vbutton" ref="incorrect">Nope</v-btn>
-              <v-btn v-on:click="nextInteraction" class="vbutton">Skip</v-btn>
+              <v-btn v-on:click="nextInteraction" class="vbutton" ref="skip">Skip</v-btn>
             </div>
             <div class="copy">
               {{copy}}
@@ -185,8 +185,10 @@
           }).finally(() => {
             this.isLoadingAnswer = false;
             this.$nextTick(() => {
-              if (this.score >= this.correctThreshold) {
+              if (this.score >= this.correctThreshold * 100) {
                 this.$refs.correct.$el.focus();
+              } else if (this.answer === '') {
+                this.$refs.skip.$el.focus();
               } else {
                 this.$refs.incorrect.$el.focus();
               }
