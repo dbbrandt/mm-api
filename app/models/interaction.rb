@@ -4,6 +4,7 @@ class Interaction < ApplicationRecord
 
   TYPES = ['ShortAnswer','MultipleChoice']
   CORRECT_THRESHOLD = 0.85
+  OVERRIDE_THRESHOLD = 0.95
   #@@jarrow = FuzzyStringMatch::JaroWinkler.create( :native )
 
   def fae_display_field
@@ -54,5 +55,9 @@ class Interaction < ApplicationRecord
     score = (length - match).to_f/length
     check = score >= CORRECT_THRESHOLD
     return check, score.round(3)
+  end
+
+  def score_override?(score)
+    score >= OVERRIDE_THRESHOLD
   end
 end
