@@ -2,6 +2,8 @@ module Api
   class InteractionsController < ApplicationController
     before_action :set_goal
 
+    MMAPIPY_URL="http://www.memorymaestro.com/mm-api-py"
+
     # GET /goals/:goal_id/interactions
     def index
       if params["deep"]
@@ -38,10 +40,29 @@ module Api
 
     # GET /goals/:goals_id/interactions/:id?answer=
     def check_answer
-      correct, score = @interaction.check_answer(params['answer'])
+      answer = params['answer']
+      correct_answer = @interaction.correct_answer
+      correct, score = @interaction.check_answer(answer)
+
+      params = "?answer=#{answer}&correct=#{correct_answer}"
+      predicted = correct_answer
+      if !answer.empty?
+        response = HTTParty.get(MMAPIPY_URL+params)
+        if response.code == 200
+          logger.info("HTTP mm-api-py result: #{response.body}")
+          results = JSON.parse(response.body)
+          predicted = results['prediction']
+          # Use the mm-api-py value unless it's overriden locally by a high score
+          # We still want to see what the api returns
+          correct = results['correct'] unless correct && @interaction.score_override?(score)
+        else
+          logger.error "check_answer: Https request faild with #{response.code} - #{response.body}"
+        end
+      end
       json_response({
          "correct": correct,
-         "score": score
+         "score": score,
+         "predicted": predicted
       })
     end
 

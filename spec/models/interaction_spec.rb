@@ -19,13 +19,13 @@ RSpec.describe Interaction, type: :model do
       interaction
     end
 
-    it 'finds an interaction' do
+    it 'detremines answer is incorrect' do
       correct, score = interaction.check_answer('wrong')
       expect(correct).to be_falsey
       expect(score).not_to eq(1)
     end
 
-    it 'does not find an interaction' do
+    it 'detrmines answer is correct' do
       correct, score = interaction.check_answer(interaction.correct_answer)
       expect(correct).to be_truthy
       expect(score).to eq(1)

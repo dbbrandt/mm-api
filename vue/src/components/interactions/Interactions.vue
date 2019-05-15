@@ -46,20 +46,20 @@
               <Spinner msg='Checking Answer'/>
             </div>
             <div v-else>
-            <div class="answer">
-              {{correct_answer}} - {{correct_text}} ({{ score }})
-            </div>
-            <div>
+              <div class="answer">
+                {{correct_answer}} - {{correct_text}} ({{ score }} {{ prediction }})
+              </div>
+              <div>
                 <v-btn v-on:click="correctNext" class="vbutton" ref="correct">Correct</v-btn>
                 <v-btn v-on:click="nextInteraction" class="vbutton" ref="incorrect">Nope</v-btn>
-              <v-btn v-on:click="nextInteraction" class="vbutton" ref="skip">Skip</v-btn>
-            </div>
-            <div class="copy">
-              {{copy}}
+                <v-btn v-on:click="nextInteraction" class="vbutton" ref="skip">Skip</v-btn>
+              </div>
+              <div class="copy">
+                {{copy}}
+              </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
     </template>
   </div>
@@ -129,6 +129,12 @@
       correct() {
         return this.result ? this.result.correct : false;
       },
+      predicted() {
+        return this.result ? this.result.predicted : '';
+      },
+      prediction() {
+        return this.predicted !== this.correct_answer ? `Predicted: ${this.predicted}` : '';
+      },
       total_score() {
         const totalScore = Math.round(this.aggregate_score / this.score_count);
         return this.score_count > 0 ? totalScore : 0;
@@ -172,11 +178,11 @@
         this.$refs.answer.focus();
         if (this.done) {
           alert(`Completed. Correct: ${this.correct_answers} Result: ${this.percent}% Score = ${this.total_score}`);
-          this.resetPosition();
+          this.loadInteractions();
         }
       },
       checkInteraction() {
-        // this.isLoadingAnswer = true;
+        this.isLoadingAnswer = true;
         api.interactions.check(this.goal, this.interaction_id, this.answer)
           .then((response) => {
             this.result = response;

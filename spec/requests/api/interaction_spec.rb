@@ -130,6 +130,7 @@ RSpec.describe 'interactions API', type: :request do
         expect(json).not_to be_empty
         expect(json['correct']).to eq(false)
         expect(json['score']).not_to eq(1)
+        expect(json['predicted']).not_to eq('')
       end
     end
 

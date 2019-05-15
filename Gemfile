@@ -41,6 +41,10 @@ gem 'draper', '~> 3.0.0'
 # gem 'fuzzy-string-match', '~>1.0'
 gem 'amatch', '~> 0.4'
 
+
+# Support External API Calls
+gem 'httparty', '~> 0.17'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
