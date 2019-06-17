@@ -39,7 +39,7 @@
         </div>
         <div v-if="correct_answer">
           <div class="show-button">
-            <v-btn v-on:click="showTitle" class="vbutton">Show</v-btn>
+            <v-btn v-on:click="showTitle" class="vbutton">Check</v-btn>
           </div>
           <div v-if="show_title">
             <div v-if="isLoadingAnswer">
