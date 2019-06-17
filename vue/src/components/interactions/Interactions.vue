@@ -31,7 +31,7 @@
         <div v-if="image_url">
           <img :src="image_url" class="stimulus_img">
         </div>
-        <div v-else class="prompt">
+        <div v-else class="prompt" v-html="prompt_copy">
           {{prompt_copy}}
         </div>
         <div class="response">
@@ -39,7 +39,7 @@
         </div>
         <div v-if="correct_answer">
           <div class="show-button">
-            <v-btn v-on:click="showTitle" class="vbutton">Show</v-btn>
+            <v-btn v-on:click="showTitle" class="vbutton">Check</v-btn>
           </div>
           <div v-if="show_title">
             <div v-if="isLoadingAnswer">
@@ -54,7 +54,7 @@
                 <v-btn v-on:click="nextInteraction" class="vbutton" ref="incorrect">Nope</v-btn>
                 <v-btn v-on:click="nextInteraction" class="vbutton" ref="skip">Skip</v-btn>
               </div>
-              <div class="copy">
+              <div class="copy" v-html="copy">
                 {{copy}}
               </div>
             </div>
@@ -236,6 +236,7 @@
   .prompt {
     font-size: 30px;
     padding: 40px;
+    text-align: left;
   }
 
   .questions {
