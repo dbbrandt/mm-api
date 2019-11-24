@@ -109,6 +109,8 @@ module Api
         "id": i.id,
         "title": i.title,
         "answer_type": i.answer_type,
+        "created_at": i.created_at,
+        "updated_at": i.updated_at,
         "prompt": {
           "title": p&.title,
           "copy": p&.copy,
