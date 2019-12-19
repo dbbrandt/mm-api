@@ -83,7 +83,7 @@ export default {
   },
   interactions: {
     index(goal, size) {
-      return axios.get(`${endpoint(GOALS)}/${goal}${INTERACTIONS}`, { params: { size: `${size}`, deep: 'true' } })
+      return axios.get(`${endpoint(GOALS)}/${goal}${INTERACTIONS}`, { params: { size: `${size}`, deep: 'game' } })
         .then(response => response.data)
         .catch(handleError);
     },

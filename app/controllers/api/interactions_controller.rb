@@ -6,13 +6,16 @@ module Api
 
     # GET /goals/:goal_id/interactions
     def index
-      if params["deep"]
-        size = params["size"] ? (params["size"].to_i - 1)  : 49
-        type = params["type"] == 'mc' ? :multiple_choice : :short_answer
-        json_response(@goal.interactions.send(type).includes(:contents).map {|i| deep_response(i)}.shuffle[0..size])
-      else
-        json_response(@goal.interactions)
+      type = params['type'] == 'mc' ? :multiple_choice : :short_answer
+      result = @goal.interactions
+      if params['deep']
+        result = result.send(type).includes(:contents).map {|i| deep_response(i)}
+        if params['deep'] == 'game'
+          size = params['size'] ? (params['size'].to_i - 1)  : 49
+          result = result.shuffle[0..size]
+        end
       end
+      json_response(result)
     end
 
     # GET /goals/:goal_id/interactions/:id
