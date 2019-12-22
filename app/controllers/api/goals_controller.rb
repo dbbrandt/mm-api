@@ -22,7 +22,7 @@ module Api
     # PUT /goals/:id
     def update
       @goal.update(goal_params)
-      head :no_content
+      json_response(@goal, :ok)
     end
 
     # DELETE /goals/:id
@@ -42,7 +42,7 @@ module Api
 
     def goal_params
       # whitelist params
-      params.permit(:title)
+      params.permit(:title,  :description, :instructions)
     end
 
     def set_goal
