@@ -31,6 +31,7 @@ module Api
 
     # PUT /goals/:goal_id/interactions/:id
     def update
+      deep_update if params['deep']
       @interaction.update(interaction_params)
       head :no_content
     end
@@ -80,7 +81,7 @@ module Api
     private
 
     def interaction_params
-      params.permit(:title, :answer_type)
+      params.permit(:title, :answer_type, :prompt, :criterion)
     end
 
     def set_goal
@@ -134,6 +135,15 @@ module Api
                     }
       end
       resp
+    end
+
+    def deep_update
+      prompt = @interaction.prompt
+      criterion = @interaction.criterion
+      logger.debug("Interaction deep update - current prompt: #{prompt.inspect}")
+      logger.debug("Interaction deep update - new prompt: #{params['prompt']}")
+      logger.debug("Interaction deep update - criterion: #{criterion.inspect}")
+      logger.debug("Interaction deep update - new criterion: #{params['criterion']}")
     end
   end
 end
