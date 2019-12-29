@@ -2,7 +2,9 @@ class Interaction < ApplicationRecord
   include Fae::BaseModelConcern
   include Amatch
 
-  TYPES = ['ShortAnswer','MultipleChoice']
+  SHORT_ANSWER = 'ShortAnswer'
+  MULTIPLE_CHOICE = 'MultipleChoice'
+  TYPES = [SHORT_ANSWER, MULTIPLE_CHOICE]
   CORRECT_THRESHOLD = 0.85
   OVERRIDE_THRESHOLD = 0.95
   #@@jarrow = FuzzyStringMatch::JaroWinkler.create( :native )

@@ -31,7 +31,7 @@ module Api
 
     # PUT /goals/:goal_id/interactions/:id
     def update
-      deep_update if params['deep']
+      save_contents if params['deep']
       @interaction.update(interaction_params)
       head :no_content
     end
@@ -137,13 +137,25 @@ module Api
       resp
     end
 
-    def deep_update
+    def save_contents
       prompt = @interaction.prompt
-      criterion = @interaction.criterion
-      logger.debug("Interaction deep update - current prompt: #{prompt.inspect}")
-      logger.debug("Interaction deep update - new prompt: #{params['prompt']}")
-      logger.debug("Interaction deep update - criterion: #{criterion.inspect}")
-      logger.debug("Interaction deep update - new criterion: #{params['criterion']}")
+      if prompt
+        new_p = params['prompt']
+        prompt.title = new_p['title'].blank? ? params['title'] : new_p['title']
+        prompt.copy = new_p['copy']
+        #TODO support saving stimulus_url
+        prompt.save
+      end
+      @interaction.criterion.each_with_index {|criterion, i|
+        if criterion
+          new_c = params['criterion'][i]
+          criterion.title = new_c['title'].blank? ? params['title'] : new_c['title']
+          criterion.copy = new_c['copy']
+          criterion.description = new_c['description']
+          criterion.descriptor = new_c['descriptor']
+          criterion.save
+        end
+      }
     end
   end
 end
