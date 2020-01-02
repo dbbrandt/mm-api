@@ -31,6 +31,7 @@ module Api
 
     # PUT /goals/:goal_id/interactions/:id
     def update
+      save_contents if params['deep']
       @interaction.update(interaction_params)
       head :no_content
     end
@@ -80,7 +81,7 @@ module Api
     private
 
     def interaction_params
-      params.permit(:title, :answer_type)
+      params.permit(:title, :answer_type, :prompt, :criterion)
     end
 
     def set_goal
@@ -134,6 +135,27 @@ module Api
                     }
       end
       resp
+    end
+
+    def save_contents
+      prompt = @interaction.prompt
+      if prompt
+        new_p = params['prompt']
+        prompt.title = new_p['title'].blank? ? params['title'] : new_p['title']
+        prompt.copy = new_p['copy']
+        #TODO support saving stimulus_url
+        prompt.save
+      end
+      @interaction.criterion.each_with_index {|criterion, i|
+        if criterion
+          new_c = params['criterion'][i]
+          criterion.title = new_c['title'].blank? ? params['title'] : new_c['title']
+          criterion.copy = new_c['copy']
+          criterion.description = new_c['description']
+          criterion.descriptor = new_c['descriptor']
+          criterion.save
+        end
+      }
     end
   end
 end

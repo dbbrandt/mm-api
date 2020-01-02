@@ -1,8 +1,11 @@
 class Interaction < ApplicationRecord
   include Fae::BaseModelConcern
+  # For Levenshtein fuzzy match
   include Amatch
 
-  TYPES = ['ShortAnswer','MultipleChoice']
+  SHORT_ANSWER = 'ShortAnswer'
+  MULTIPLE_CHOICE = 'MultipleChoice'
+  TYPES = [SHORT_ANSWER, MULTIPLE_CHOICE]
   CORRECT_THRESHOLD = 0.85
   OVERRIDE_THRESHOLD = 0.95
   #@@jarrow = FuzzyStringMatch::JaroWinkler.create( :native )
@@ -30,8 +33,7 @@ class Interaction < ApplicationRecord
 
   def stimulus_url
     return unless prompt
-    url = prompt.stimulus&.asset&.url || ""
-    url
+   prompt.stimulus&.asset&.url || ""
   end
 
   def prompt
@@ -54,7 +56,7 @@ class Interaction < ApplicationRecord
     length = (correct_answer+answer).length
     score = (length - match).to_f/length
     check = score >= CORRECT_THRESHOLD
-    return check, score.round(3)
+    [check, score.round(3)]
   end
 
   def score_override?(score)
