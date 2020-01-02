@@ -26,14 +26,14 @@ module Api
     # POST /goals/:goal_id/interactions
     def create
       @interaction = @goal.interactions.create!(interaction_params)
-      json_response(@interaction, :created)
+      json_response(params["deep"] ? deep_response(@interaction) : @interaction, :ok)
     end
 
     # PUT /goals/:goal_id/interactions/:id
     def update
       save_contents if params['deep']
       @interaction.update(interaction_params)
-      head :no_content
+      json_response(params["deep"] ? deep_response(@interaction) : @interaction, :ok)
     end
 
     # DELETE /goals/:goal_id/interactions/:id
