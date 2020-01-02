@@ -1,5 +1,6 @@
 class Interaction < ApplicationRecord
   include Fae::BaseModelConcern
+  # For Levenshtein fuzzy match
   include Amatch
 
   SHORT_ANSWER = 'ShortAnswer'
@@ -32,8 +33,7 @@ class Interaction < ApplicationRecord
 
   def stimulus_url
     return unless prompt
-    url = prompt.stimulus&.asset&.url || ""
-    url
+   prompt.stimulus&.asset&.url || ""
   end
 
   def prompt
@@ -56,7 +56,7 @@ class Interaction < ApplicationRecord
     length = (correct_answer+answer).length
     score = (length - match).to_f/length
     check = score >= CORRECT_THRESHOLD
-    return check, score.round(3)
+    [check, score.round(3)]
   end
 
   def score_override?(score)

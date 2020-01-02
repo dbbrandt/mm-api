@@ -14,4 +14,8 @@ class Goal < ApplicationRecord
   has_many :interactions, :dependent => :destroy
   has_many :import_files, :dependent => :destroy
   has_many :contents, through: :interactions
+
+  def image_url
+    hero_image&.asset&.url || ""
+  end
 end
