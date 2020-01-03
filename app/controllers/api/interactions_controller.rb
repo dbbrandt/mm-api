@@ -26,13 +26,14 @@ module Api
     # POST /goals/:goal_id/interactions
     def create
       @interaction = @goal.interactions.create!(interaction_params)
+      save_contents if params['prompt']
       json_response(params["deep"] ? deep_response(@interaction) : @interaction, :ok)
     end
 
     # PUT /goals/:goal_id/interactions/:id
     def update
-      save_contents if params['deep']
       @interaction.update(interaction_params)
+      save_contents if params['deep']
       json_response(params["deep"] ? deep_response(@interaction) : @interaction, :ok)
     end
 
@@ -138,23 +139,31 @@ module Api
     end
 
     def save_contents
+      new_prompt = params['prompt']
+      title = new_prompt['title'].blank? ? params['title'] : new_prompt['title']
+      copy = new_prompt['copy']
       prompt = @interaction.prompt
+      #TODO support saving stimulus_url
       if prompt
-        new_p = params['prompt']
-        prompt.title = new_p['title'].blank? ? params['title'] : new_p['title']
-        prompt.copy = new_p['copy']
-        #TODO support saving stimulus_url
+        prompt.title = title
+        prompt.copy = copy
         prompt.save
+      else
+        @interaction.contents.create!( content_type: Content::PROMPT, title: title, copy: copy)
       end
-      @interaction.criterion.each_with_index {|criterion, i|
-        if criterion
-          new_c = params['criterion'][i]
-          criterion.title = new_c['title'].blank? ? params['title'] : new_c['title']
-          criterion.copy = new_c['copy']
-          criterion.description = new_c['description']
-          criterion.descriptor = new_c['descriptor']
-          criterion.save
-        end
+
+      @interaction.criterion.each_with_index { |criterion| criterion.destroy! }
+      criterion = params['criterion']
+      criterion.each_with_index {|c|
+          value = {
+              title: c['title'].blank? ? params['title'] : c['title'],
+              content_type: Content::CRITERION,
+              copy: c['copy'].blank? ? c['descriptor'] : c['copy'],
+              description: c['description'],
+              descriptor: c['descriptor'],
+              score: c['score']
+          }
+          @interaction.contents.create!(value)
       }
     end
   end
