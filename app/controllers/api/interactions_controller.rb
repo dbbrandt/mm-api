@@ -117,32 +117,55 @@ module Api
         "created_at": i.created_at,
         "updated_at": i.updated_at,
         "prompt": {
-          "title": p&.title,
-          "copy": p&.copy,
-          "stimulus_url": i.stimulus_url
+            "id": p&.id,
+            "title": p&.title,
+            "copy": p&.copy,
+            "stimulus_url": i.stimulus_url
         },
         "criterion": criterion_response(interaction)
       }
     end
 
     def criterion_response(interaction)
-      resp = []
-      interaction.criterion.each do |c|
-        resp << { "title": c.title,
-                      "description": c.description,
-                      "copy": c.copy,
-                      "descriptor": c.descriptor,
-                      "score": c.score
-                    }
+      resp = interaction.criterion.map do |c|
+        {
+            "id": c.id,
+            "title": c.title,
+            "description": c.description,
+            "copy": c.copy,
+            "descriptor": c.descriptor,
+            "score": c.score
+        }
       end
       resp
     end
 
     def save_contents
-      new_prompt = params['prompt']
-      title = new_prompt['title'].blank? ? params['title'] : new_prompt['title']
-      copy = new_prompt['copy']
+      create_or_update_prompt
+
+      # Perform appropriate CRUD action based on params for criterion
+      criterion = params['criterion']
+      ids = @interaction.criterion.map {|criteria| criteria.id }
+      update_ids = criterion.map {|criteria| criteria['id']}.compact
+      delete_ids = ids - update_ids
+      delete_ids.each {|id| delete_criterion(id)}
+      criterion.each_with_index do |criteria|
+          id = criteria['id']
+          if delete_ids.include?(id)
+            delete_criterion(id)
+          elsif update_ids.include?(id)
+            update_criterion(id, criteria)
+          else
+            create_criterion(criteria)
+          end
+      end
+    end
+
+    def create_or_update_prompt
       prompt = @interaction.prompt
+      values = params['prompt']
+      title = values['title'].blank? ? params['title'] : values['title']
+      copy = values['copy']
       #TODO support saving stimulus_url
       if prompt
         prompt.title = title
@@ -151,19 +174,29 @@ module Api
       else
         @interaction.contents.create!( content_type: Content::PROMPT, title: title, copy: copy)
       end
+    end
 
-      @interaction.criterion.each_with_index { |criterion| criterion.destroy! }
-      criterion = params['criterion']
-      criterion.each_with_index {|c|
-          value = {
-              title: c['title'].blank? ? params['title'] : c['title'],
-              content_type: Content::CRITERION,
-              copy: c['copy'].blank? ? c['descriptor'] : c['copy'],
-              description: c['description'],
-              descriptor: c['descriptor'],
-              score: c['score']
-          }
-          @interaction.contents.create!(value)
+    def delete_criterion(id)
+      Content.delete(id)
+    end
+
+    def update_criterion(id, values)
+        criteria = Content.find(id)
+        criteria.update!(criteria_values(values))
+    end
+
+    def create_criterion(values)
+        @interaction.criterion.create!(criteria_values(values))
+    end
+
+    def criteria_values(criteria)
+      {
+          title: criteria['title'].blank? ? params['title'] : criteria['title'],
+          content_type: Content::CRITERION,
+          copy: criteria['copy'].blank? ? criteria['descriptor'] : criteria['copy'],
+          description: criteria['description'],
+          descriptor: criteria['descriptor'],
+          score: criteria['score']
       }
     end
   end
