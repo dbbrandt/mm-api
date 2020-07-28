@@ -150,7 +150,7 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (4.2.1)
       railties (>= 3.2.16)
-    json (2.1.0)
+    json (2.3.1)
     judge (2.1.1)
       rails (>= 3.1)
     judge-simple_form (1.0.0)
