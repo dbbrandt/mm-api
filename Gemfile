@@ -11,7 +11,7 @@ gem 'rails', '~> 5.1.0'
 # Use sqlite3 as the database for Active Record
 gem 'pg'
 # Use Puma as the app server
-gem 'puma', '~> 3.0'
+gem 'puma', '~> 3.12'
 # Use SLIM for HTML
 gem 'slim-rails', '~> 3.1'
 # Use SCSS for stylesheets
