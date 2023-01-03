@@ -44,7 +44,7 @@ gem 'amatch', '~> 0.4'
 # Allow local development
 gem 'rack-cors'
 # Support External API Calls
-gem 'httparty', '~> 0.17'
+gem 'httparty', '~> 0.21'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
